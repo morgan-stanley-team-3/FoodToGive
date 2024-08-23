@@ -335,7 +335,7 @@ function Cards() {
 
                       {donorSignupForm.formState.isSubmitSuccessful && (
                         <p className='text-green-600'>
-                          Sign up Success! Redirecting...
+                          Sign Up Success! Redirecting...
                         </p>
                       )}
 
@@ -493,7 +493,7 @@ function Cards() {
 
                       {beneficiarySignupForm.formState.isSubmitSuccessful && (
                         <p className='text-green-600'>
-                          Sign up Success! Redirecting...
+                          Sign Up Success! Redirecting...
                         </p>
                       )}
 
@@ -519,7 +519,7 @@ function Cards() {
             <TabsContent value='admin'>
               <Card className='w-[100%] mt-4 min-w-[412px]'>
                 <CardHeader>
-                  <CardTitle className='pt-4'>Admin Login</CardTitle>
+                  <CardTitle className='pt-4'>Admin Sign Up</CardTitle>
                   <CardDescription className='pt-2 pb-2'>
                     Enter in your Administrator credentials to get started!
                   </CardDescription>
@@ -594,12 +594,12 @@ function Cards() {
 
                       {adminSignupForm.formState.isSubmitSuccessful && (
                         <p className='text-green-600'>
-                          Login Success! Redirecting...
+                          Sign Up Success! Redirecting...
                         </p>
                       )}
 
                       <Button className='w-full mt-4' type='submit'>
-                        Login
+                        Sign Up
                       </Button>
                     </form>
                   </Form>
