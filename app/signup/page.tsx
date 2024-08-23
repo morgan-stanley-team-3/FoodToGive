@@ -483,6 +483,63 @@ function Cards() {
                       )}
                       className='flex flex-col gap-4'
                     >
+                      <p className='mt-4 font-bold'>Donor Information</p>
+                      <FormField
+                        control={beneficiarySignupForm.control}
+                        name='agency'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Donor Agency Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder='Agency Name...'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={beneficiarySignupForm.control}
+                        name='poc_name'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Point of Contact Name</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder='Name...' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={beneficiarySignupForm.control}
+                        name='poc_phone'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>
+                                Point of Contact Phone Number
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type='tel'
+                                  placeholder='Phone Number...'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <p className='mt-4 font-bold'>Account Details</p>
                       <FormField
                         control={beneficiarySignupForm.control}
                         name='email'
@@ -529,62 +586,6 @@ function Cards() {
                                   {...field}
                                   placeholder='Confirm Password...'
                                   type='password'
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                      <FormField
-                        control={beneficiarySignupForm.control}
-                        name='agency'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>Donor Agency Name</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder='Agency Name...'
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-
-                      <p className='mt-4'>Contact Details</p>
-                      <FormField
-                        control={beneficiarySignupForm.control}
-                        name='poc_name'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>Point of Contact Name</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder='Name...' />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                      <FormField
-                        control={beneficiarySignupForm.control}
-                        name='poc_phone'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>
-                                Point of Contact Phone Number
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  type='tel'
-                                  placeholder='Phone Number...'
                                 />
                               </FormControl>
                               <FormMessage />
