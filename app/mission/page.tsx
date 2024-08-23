@@ -1,19 +1,12 @@
 "use client";
 
 import React from 'react';
+import Header from '../components/Header'; // Adjust the path as needed
 
 const MissionPage: React.FC = () => {
   return (
     <div className="bg-gray-50 min-h-screen p-8">
-      <header className="flex justify-between items-center mb-12">
-        <div className="text-3xl font-bold text-green-600">Singapore Food Bank</div>
-        <nav className="space-x-6 text-lg">
-          <a href="/" className="text-gray-700 hover:text-green-600">Home</a>
-          <a href="/values" className="text-gray-700 hover:text-green-600">Our Values</a>
-          <a href="/what-we-do" className="text-gray-700 hover:text-green-600">What We Do</a>
-        </nav>
-      </header>
-
+      <Header />
       <main className="max-w-7xl mx-auto">
         <section className="bg-white rounded-lg shadow-lg p-12 mb-12">
           <h1 className="text-4xl font-bold text-center mb-8 text-green-600">Our Mission</h1>

@@ -1,22 +1,17 @@
-"use client"; // This marks the component as a client component
+"use client";
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Header from './components/Header';
+
+ 
 
 const HomePage: React.FC = () => {
   const router = useRouter();
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
-      <header className="flex justify-between items-center mb-8">
-        <div className="text-2xl font-bold">Food2Give</div>
-        <nav className="space-x-4">
-          <a href="/" className="text-gray-700 hover:text-gray-900">Home</a>
-          <a href="/about" className="text-gray-700 hover:text-gray-900">About Us</a>
-          <a href="/about" className="text-gray-700 hover:text-gray-900">Donor Login</a>
-          <a href="/about" className="text-gray-700 hover:text-gray-900">Beneficiary Login</a>
-        </nav>
-      </header>
+      <Header />  {/* Imported and used the Header component */}
 
       <main>
         <section className="bg-white rounded-lg shadow-md p-8 mb-8 text-center">

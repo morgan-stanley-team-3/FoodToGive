@@ -1,18 +1,12 @@
 "use client";
 
 import React from 'react';
+import Header from '../components/Header'; // Adjust the import path as necessary
 
 const ValuesPage: React.FC = () => {
   return (
     <div className="bg-gray-50 min-h-screen p-8">
-      <header className="flex justify-between items-center mb-12">
-        <div className="text-3xl font-bold text-green-600">Singapore Food Bank</div>
-        <nav className="space-x-6 text-lg">
-          <a href="/" className="text-gray-700 hover:text-green-600">Home</a>
-          <a href="/mission" className="text-gray-700 hover:text-green-600">Our Mission</a>
-          <a href="/what-we-do" className="text-gray-700 hover:text-green-600">What We Do</a>
-        </nav>
-      </header>
+      <Header />  {/* Imported and used the Header component */}
 
       <main className="max-w-7xl mx-auto">
         <section className="bg-white rounded-lg shadow-lg p-12 mb-12">
