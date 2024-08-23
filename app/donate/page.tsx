@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 const Donate = () => {
 
@@ -41,7 +42,11 @@ const Donate = () => {
     consumeByTiming: z.string().nonempty({
       message: "Consume By Timing is required."
     }), 
-    foodImages: z.array(z.instanceof(File))
+    foodImages: z.array(z.instanceof(File)),
+    deliveryMethod: z.string(),
+    pickUpTime: z.string().optional(), 
+    pickUpLocation: z.string().optional(), 
+    dropOffTime: z.string().optional()
   });
 
   const nonCookedFormSchema = z.object({
@@ -58,7 +63,11 @@ const Donate = () => {
     quantity: z.number().min(1, { 
       message: "Quantity of food must be at least 1."
     }),
-    foodImages: z.array(z.instanceof(File))
+    foodImages: z.array(z.instanceof(File)),
+    deliveryMethod: z.string(),
+    pickUpTime: z.string().optional(), 
+    pickUpLocation: z.string().optional(), 
+    dropOffTime: z.string().optional()
   });
 
   const cookedForm = useForm<z.infer<typeof cookedFormSchema>>({
@@ -94,7 +103,8 @@ const Donate = () => {
         foodName: "",
         timePrepared: "",
         specialHandling: "", 
-        numberOfServings: 0
+        numberOfServings: 0, 
+        deliveryMethod: ""
       })
     } else { 
       nonCookedForm.reset({
@@ -102,7 +112,8 @@ const Donate = () => {
         expiryDate: "",
         foodCategory: "",
         specialHandling: "",
-        quantity: 0
+        quantity: 0,
+        deliveryMethod: ""
       });
       setSelectedCategory(""); 
     }
@@ -112,7 +123,6 @@ const Donate = () => {
   const [foodType, setFoodType] = useState("Non-Cooked Food");
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files) {
@@ -121,7 +131,6 @@ const Donate = () => {
       // cookedForm.setValue("foodImages", files); // Store files in the form state
     }
   };
-
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
@@ -289,6 +298,88 @@ const Donate = () => {
                 )}
               />
 
+              <FormField
+                  control={cookedForm.control}
+                  name="deliveryMethod"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Delivery Method</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          className="flex flex-col space-y-1"
+                        >
+                          <FormItem className="flex items-center space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="pickup" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="selfDeliver" />
+                            </FormControl>
+                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {cookedForm.watch("deliveryMethod") === "pickup" && (
+                  <>
+        
+                    <FormField
+                      control={cookedForm.control}
+                      name="pickUpLocation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Pickup Location</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={cookedForm.control}
+                      name="pickUpTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Preferred Pickup Time</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" type="datetime-local" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
+                {cookedForm.watch("deliveryMethod") === "selfDeliver" && (
+                  <>
+                    <FormField
+                      control={cookedForm.control}
+                      name="dropOffTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Drop Off Time</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" type="datetime-local" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                          <FormDescription>Our address is 218 Pandan Loop, Level 6, Singapore 128408. We are open from 9.30am - 6pm from Mondays to Fridays and 10am - 5pm on Saturdays. </FormDescription>
+
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
               <div className="flex justify-end"><Button type="submit">Submit</Button></div>
             </form>
           </Form>
@@ -412,6 +503,86 @@ const Donate = () => {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                  control={nonCookedForm.control}
+                  name="deliveryMethod"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Delivery Method</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          className="flex flex-col space-y-1"
+                        >
+                          <FormItem className="flex items-center space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="pickup" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3">
+                            <FormControl>
+                              <RadioGroupItem value="selfDeliver" />
+                            </FormControl>
+                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {nonCookedForm.watch("deliveryMethod") === "pickup" && (
+                  <>
+                    <FormField
+                      control={nonCookedForm.control}
+                      name="pickUpLocation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Pickup Location</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={nonCookedForm.control}
+                      name="pickUpTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Preferred Pickup Time</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" type="datetime-local" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
+                {nonCookedForm.watch("deliveryMethod") === "selfDeliver" && (
+                  <>
+                    <FormField
+                      control={nonCookedForm.control}
+                      name="dropOffTime"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Drop Off Time</FormLabel>
+                          <FormControl>
+                            <Input className="shadow-sm" type="datetime-local" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                          <FormDescription>Our address is 218 Pandan Loop, Level 6, Singapore 128408. We are open from 9.30am - 6pm from Mondays to Fridays and 10am - 5pm on Saturdays. </FormDescription>
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
               <div className="flex justify-end"><Button type="submit">Submit</Button></div>
     
             </form>
