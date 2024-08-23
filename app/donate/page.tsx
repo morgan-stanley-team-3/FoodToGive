@@ -95,7 +95,6 @@ const Donate = () => {
   });
 
   function onSubmit(values: any) {
-    console.log(values);
 
     // make api call to save donation details in mongodb 
     if (foodType === "Cooked Food") { 
