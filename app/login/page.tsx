@@ -21,30 +21,26 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '../../components/ui/select';
-import { SelectValue } from '@radix-ui/react-select';
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+
+{
+  /* Custom imports */
+}
+import { LOGIN_TYPES, QUERY_PARAM_NAME } from '@/lib/login/constants';
 
 const loginScheme = z.object({
   email: z.string().email('Email is required'),
   password: z.string(),
 });
 
-const loginTypes = ['donor', 'beneficiary', 'admin'];
-
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const form = searchParams.get('type') ?? '';
-  const formToRender = loginTypes.includes(form) ? form : loginTypes[0];
+  const form = searchParams.get(QUERY_PARAM_NAME) ?? '';
+  const formToRender = LOGIN_TYPES.includes(form) ? form : LOGIN_TYPES[0];
 
   const donorLoginForm = useForm<z.infer<typeof loginScheme>>({
     resolver: zodResolver(loginScheme),
@@ -100,6 +96,13 @@ export default function Home() {
     //   });
   }
 
+  /**
+   * Updates the URL query parameter with the render argument.
+   * This is useful for ensuring that when the user uses the back button that they will
+   * be redirected back to the page which directed them to the new page in the first place.
+   *
+   * @param render String representing what argument to provide in the query param
+   */
   function updateUrlHistory(render: string) {
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('type', render);
