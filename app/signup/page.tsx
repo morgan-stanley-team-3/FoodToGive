@@ -3,6 +3,7 @@
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,7 +37,13 @@ import Link from 'next/link';
 {
   /* Custom imports */
 }
-import { LOGIN_TYPES, QUERY_PARAM_NAME } from '@/lib/login/constants';
+import {
+  HYGIENE_RATING,
+  LOGIN_TYPES,
+  QUERY_PARAM_NAME,
+  HygieneRating,
+} from '@/lib/login/constants';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const loginScheme = z.object({
   email: z.string().email('Email is required'),
@@ -49,8 +56,12 @@ const donorSignupScheme = z
     password: z.string().min(1, 'Password cannot be empty'),
     confirm_password: z.string().min(1, 'Password cannot be empty'),
     agency: z.string().min(1, 'Donor Name cannot be empty'),
+    uen: z.string(),
+    address: z.string(),
     poc_name: z.string().min(1, 'Point of Contact Name should not be empty'),
     poc_phone: z.string().min(1, 'Phone number is required'),
+    halal_certified: z.boolean(),
+    hygiene_certification: HYGIENE_RATING,
   })
   .refine((input) => {
     input.password === input.confirm_password,
@@ -103,13 +114,19 @@ function Cards() {
       email: '',
       password: '',
       confirm_password: '',
+      agency: '',
+      uen: '',
+      address: '',
+      poc_name: '',
+      poc_phone: '',
+      halal_certified: false,
     },
   });
 
   const beneficiarySignupForm = useForm<
     z.infer<typeof beneficiarySignupScheme>
   >({
-    resolver: zodResolver(loginScheme),
+    resolver: zodResolver(beneficiarySignupScheme),
     defaultValues: {
       email: '',
       password: '',
@@ -117,7 +134,7 @@ function Cards() {
   });
 
   const adminSignupForm = useForm<z.infer<typeof adminSignupScheme>>({
-    resolver: zodResolver(loginScheme),
+    resolver: zodResolver(adminSignupScheme),
     defaultValues: {
       email: '',
       password: '',
@@ -170,7 +187,7 @@ function Cards() {
     <section className='h-screen w-screen flex flex-row items-center'>
       <div className='container mx-auto my-auto'>
         <div className='flex flex-col items-center p-4 mt-8 mb-8'>
-          <Tabs defaultValue={formToRender} className='w-[50%] min-w-[412px]'>
+          <Tabs defaultValue={formToRender} className='w-[50%] min-w-[512px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3'>
               <TabsTrigger
@@ -202,10 +219,10 @@ function Cards() {
             {/* Define the contents of the tabs here */}
             {/* Donor card */}
             <TabsContent value='donor'>
-              <Card className='w-[100%] mt-4 min-w-[412px]'>
+              <Card className='w-[100%] mt-4 min-w-[512px]'>
                 <CardHeader>
                   <CardTitle className='pt-4'>Donor Sign Up</CardTitle>
-                  <CardDescription className='pt-2 pb-2'>
+                  <CardDescription className='pt-2'>
                     Fill in your personal details and some information about you
                     to get started!
                   </CardDescription>
@@ -218,6 +235,152 @@ function Cards() {
                       )}
                       className='flex flex-col gap-4'
                     >
+                      <p className='mt-4 font-bold'>Details</p>
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='agency'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Organisation Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder='Organisation Name...'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='uen'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>UEN Number</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder='UEN (if applicable)...'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='poc_name'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Point of Contact Name</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder='Name...' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='poc_phone'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>
+                                Point of Contact Phone Number
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type='tel'
+                                  placeholder='Phone Number...'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='address'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Address</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder='Address...' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <p className='mt-4 font-bold'>Certification Status</p>
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='halal_certified'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>
+                                Select if your organisation is Halal certified.
+                              </FormLabel>
+                              <FormDescription>
+                                If you declare that your organisation is Halal
+                                certified, random checks may be done to ensure
+                                that your organisation is Halal certified.
+                              </FormDescription>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorSignupForm.control}
+                        name='hygiene_certification'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>
+                                Select your organisation's hygiene rating
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder='Select a hygiene rating' />
+                                  </SelectTrigger>
+                                </FormControl>
+
+                                <SelectContent>
+                                  <SelectItem value='A'>A</SelectItem>
+                                  <SelectItem value='B'>B</SelectItem>
+                                  <SelectItem value='C'>C</SelectItem>
+                                  <SelectItem value='D'>D</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <p className='mt-4 font-bold'>Account Details</p>
                       <FormField
                         control={donorSignupForm.control}
                         name='email'
@@ -264,61 +427,6 @@ function Cards() {
                                   {...field}
                                   placeholder='Confirm Password...'
                                   type='password'
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                      <FormField
-                        control={donorSignupForm.control}
-                        name='agency'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>Donor Agency Name</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder='Agency Name...'
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-
-                      <p className='mt-4'>Contact Details</p>
-                      <FormField
-                        control={donorSignupForm.control}
-                        name='poc_name'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>Point of Contact Name</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder='Name...' />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                      <FormField
-                        control={donorSignupForm.control}
-                        name='poc_phone'
-                        render={({ field }) => {
-                          return (
-                            <FormItem>
-                              <FormLabel>
-                                Point of Contact Phone Number
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder='Phone Number...'
                                 />
                               </FormControl>
                               <FormMessage />
