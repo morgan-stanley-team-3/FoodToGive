@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
@@ -36,7 +36,7 @@ const loginScheme = z.object({
   password: z.string(),
 });
 
-export default function Home() {
+function Cards() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const form = searchParams.get(QUERY_PARAM_NAME) ?? '';
@@ -112,7 +112,7 @@ export default function Home() {
   return (
     <section className='h-screen w-screen flex items-center'>
       <div className='container mx-auto'>
-        <div className='flex flex-col items-center p-4]'>
+        <div className='flex flex-col items-center p-4 mt-8 mb-8'>
           <Tabs defaultValue={formToRender} className='w-[50%] min-w-[412px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3'>
@@ -145,87 +145,83 @@ export default function Home() {
             {/* Define the contents of the tabs here */}
             {/* Donor card */}
             <TabsContent value='donor'>
-              <section id='donor'>
-                <Card className='w-[100%] mt-4 min-w-[412px]'>
-                  <CardHeader>
-                    <CardTitle className='pt-4'>Donor Login</CardTitle>
-                    <CardDescription className='pt-2 pb-2'>
-                      Enter in your email and password to your Donor account to
-                      get started!
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...donorLoginForm}>
-                      <form
-                        onSubmit={donorLoginForm.handleSubmit(
-                          onSubmitDonorLogin
-                        )}
-                        className='flex flex-col gap-4'
-                      >
-                        <FormField
-                          control={donorLoginForm.control}
-                          name='email'
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                  <Input {...field} placeholder='Email...' />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                        <FormField
-                          control={donorLoginForm.control}
-                          name='password'
-                          render={({ field }) => {
-                            return (
-                              <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder='Password...'
-                                    type='password'
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            );
-                          }}
-                        />
+              <Card className='w-[100%] mt-4 min-w-[412px]'>
+                <CardHeader>
+                  <CardTitle className='pt-4'>Donor Login</CardTitle>
+                  <CardDescription className='pt-2 pb-2'>
+                    Enter in your email and password to your Donor account to
+                    get started!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form {...donorLoginForm}>
+                    <form
+                      onSubmit={donorLoginForm.handleSubmit(onSubmitDonorLogin)}
+                      className='flex flex-col gap-4'
+                    >
+                      <FormField
+                        control={donorLoginForm.control}
+                        name='email'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder='Email...' />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                      <FormField
+                        control={donorLoginForm.control}
+                        name='password'
+                        render={({ field }) => {
+                          return (
+                            <FormItem>
+                              <FormLabel>Password</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder='Password...'
+                                  type='password'
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
 
-                        {donorLoginForm.formState.errors.root && (
-                          <p className='text-red-600'>
-                            {donorLoginForm.formState.errors.root.message}
-                          </p>
-                        )}
+                      {donorLoginForm.formState.errors.root && (
+                        <p className='text-red-600'>
+                          {donorLoginForm.formState.errors.root.message}
+                        </p>
+                      )}
 
-                        {donorLoginForm.formState.isSubmitSuccessful && (
-                          <p className='text-green-600'>
-                            Login Success! Redirecting...
-                          </p>
-                        )}
+                      {donorLoginForm.formState.isSubmitSuccessful && (
+                        <p className='text-green-600'>
+                          Login Success! Redirecting...
+                        </p>
+                      )}
 
-                        <Button className='w-full mt-4' type='submit'>
-                          Login
-                        </Button>
-                      </form>
-                    </Form>
-                  </CardContent>
-                  <CardFooter className='flex flex-col items-center mt-4'>
-                    <p className='text-sm'>
-                      Do not have an account yet? Click{' '}
-                      <Link href='/signup?type=donor' className='underline'>
-                        here
-                      </Link>{' '}
-                      to sign up!
-                    </p>
-                  </CardFooter>
-                </Card>
-              </section>
+                      <Button className='w-full mt-4' type='submit'>
+                        Login
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+                <CardFooter className='flex flex-col items-center mt-4'>
+                  <p className='text-sm'>
+                    Do not have an account yet? Click{' '}
+                    <Link href='/signup?type=donor' className='underline'>
+                      here
+                    </Link>{' '}
+                    to sign up!
+                  </p>
+                </CardFooter>
+              </Card>
             </TabsContent>
 
             {/* Beneficiary card */}
@@ -394,5 +390,13 @@ export default function Home() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense>
+      <Cards />
+    </Suspense>
   );
 }
