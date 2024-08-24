@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import React from 'react';
-import Header from '../components/Header'; // Adjust the import path as necessary
+import Header from '../../components/Header'; // Adjust the import path as necessary
 
 const ValuesPage: React.FC = () => {
   return (
@@ -38,7 +38,6 @@ const ValuesPage: React.FC = () => {
             </div>
           </div>
         </section>
-
 
         <section className="bg-[#E7EDCF] p-12 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center text-[#A2C765] mb-8">How We Live Our Values</h2>

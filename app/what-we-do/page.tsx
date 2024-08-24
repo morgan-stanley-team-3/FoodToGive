@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import React from 'react';
-import Header from '../components/Header'; // Adjust the import path as necessary
+import Header from '../../components/Header'; // Adjust the import path as necessary
 
 const WhatWeDoPage: React.FC = () => {
   return (
