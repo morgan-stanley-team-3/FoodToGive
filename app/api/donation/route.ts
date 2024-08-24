@@ -8,11 +8,14 @@ if (!uri) {
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
+  serverSelectionTimeoutMS: 30000, // 30 seconds timeout
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000,
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
-    deprecationErrors: true
-  },
+    deprecationErrors: true,
+  }
 });
 
 export async function POST(request: Request) { 
