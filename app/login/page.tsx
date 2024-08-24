@@ -30,6 +30,7 @@ import Link from 'next/link';
   /* Custom imports */
 }
 import { LOGIN_TYPES, QUERY_PARAM_NAME } from '@/lib/login/constants';
+import Header from '../../components/Header';
 
 const loginScheme = z.object({
   email: z.string().email('Email is required'),
@@ -110,10 +111,10 @@ function Cards() {
   }
 
   return (
-    <section className='h-screen w-screen flex items-center'>
+    <section className='h-full w-full flex flex-col items-center'>
       <div className='container mx-auto'>
-        <div className='flex flex-col items-center p-4 mt-8 mb-8'>
-          <Tabs defaultValue={formToRender} className='w-[50%] min-w-[412px]'>
+        <div className='flex flex-col items-center p-4 mb-4'>
+          <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3'>
               <TabsTrigger
@@ -395,8 +396,11 @@ function Cards() {
 
 export default function Home() {
   return (
-    <Suspense>
-      <Cards />
-    </Suspense>
+    <div className='bg-gray-100 min-h-screen p-8'>
+      <Header />
+      <Suspense>
+        <Cards />
+      </Suspense>
+    </div>
   );
 }
