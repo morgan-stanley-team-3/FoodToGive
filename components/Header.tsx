@@ -21,17 +21,11 @@ const Header: React.FC = () => {
         <a href='/what-we-do' className='text-gray-700 hover:text-green-600'>
           What We Do
         </a>
-        <a
-          href='/login?type=donor'
-          className='text-gray-700 hover:text-green-600'
-        >
-          Donor Login
+        <a href='/login' className='text-gray-700 hover:text-green-600'>
+          Login
         </a>
-        <a
-          href='/login?type=beneficiary'
-          className='text-gray-700 hover:text-green-600'
-        >
-          Beneficiary Login
+        <a href='/signup' className='text-gray-700 hover:text-green-600'>
+          Sign Up
         </a>
       </nav>
     </header>

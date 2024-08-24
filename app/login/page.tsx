@@ -25,6 +25,7 @@ import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 
 {
   /* Custom imports */
@@ -68,33 +69,93 @@ function Cards() {
   });
 
   async function onSubmitDonorLogin(values: z.infer<typeof loginScheme>) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    const signin = await signIn('credentials', {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    if (signin?.error) {
+      donorLoginForm.setError('root', {
+        type: 'manual',
+        message: signin.error,
+      });
+      return;
+    }
+
+    if (signin?.ok) {
+      const session = await getSession();
+
+      if (session?.user.role !== 'donor') {
+        signOut({ redirect: false });
+        donorLoginForm.setError('root', {
+          type: 'manual',
+          message: 'You are not registered as a donor!',
+        });
+      } else {
+        router.push('/dashboard');
+      }
+    }
   }
 
   async function onSubmitBeneficiaryLogin(values: z.infer<typeof loginScheme>) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    const signin = await signIn('credentials', {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    if (signin?.error) {
+      beneficiaryLoginForm.setError('root', {
+        type: 'manual',
+        message: signin.error,
+      });
+      return;
+    }
+
+    if (signin?.ok) {
+      const session = await getSession();
+
+      if (session?.user.role !== 'beneficiary') {
+        signOut({ redirect: false });
+        beneficiaryLoginForm.setError('root', {
+          type: 'manual',
+          message: 'You are not registered as a beneficiary!',
+        });
+      } else {
+        router.push('/dashboard');
+      }
+    }
   }
 
   async function onSubmitAdminLogin(values: z.infer<typeof loginScheme>) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    const signin = await signIn('credentials', {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    if (signin?.error) {
+      adminLoginForm.setError('root', {
+        type: 'manual',
+        message: signin.error,
+      });
+      return;
+    }
+
+    if (signin?.ok) {
+      const session = await getSession();
+
+      if (session?.user.role !== 'admin') {
+        signOut({ redirect: false });
+        adminLoginForm.setError('root', {
+          type: 'manual',
+          message: 'You are not registered as an admin!',
+        });
+      } else {
+        router.push('/dashboard');
+      }
+    }
   }
 
   /**

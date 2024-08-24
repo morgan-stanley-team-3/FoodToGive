@@ -41,67 +41,40 @@ import {
   HYGIENE_RATING,
   LOGIN_TYPES,
   QUERY_PARAM_NAME,
-  HygieneRating,
 } from '@/lib/login/constants';
 import { Checkbox } from '@/components/ui/checkbox';
 import Header from '../../components/Header';
+import { registerUser } from '@/actions/signup';
+import mongoose from 'mongoose';
+import User from '@/models/User';
 
-const loginScheme = z.object({
+const donorSignupScheme = z.object({
   email: z.string().email('Email is required'),
-  password: z.string(),
+  password: z.string().min(1, 'Password cannot be empty'),
+  confirm_password: z.string().min(1, 'Password cannot be empty'),
+  agency: z.string().min(1, 'Donor Name cannot be empty'),
+  uen: z.string(),
+  address: z.string(),
+  poc_name: z.string().min(1, 'Point of Contact Name should not be empty'),
+  poc_phone: z.string().min(1, 'Phone number is required'),
+  halal_certified: z.boolean(),
+  hygiene_certification: HYGIENE_RATING,
 });
 
-const donorSignupScheme = z
-  .object({
-    email: z.string().email('Email is required'),
-    password: z.string().min(1, 'Password cannot be empty'),
-    confirm_password: z.string().min(1, 'Password cannot be empty'),
-    agency: z.string().min(1, 'Donor Name cannot be empty'),
-    uen: z.string(),
-    address: z.string(),
-    poc_name: z.string().min(1, 'Point of Contact Name should not be empty'),
-    poc_phone: z.string().min(1, 'Phone number is required'),
-    halal_certified: z.boolean(),
-    hygiene_certification: HYGIENE_RATING,
-  })
-  .refine((input) => {
-    input.password === input.confirm_password,
-      {
-        message: `Passwords don't match!`,
-        path: ['confirm_password'],
-      };
-  });
+const beneficiarySignupScheme = z.object({
+  email: z.string().email('Email is required'),
+  password: z.string().min(1, 'Password cannot be empty'),
+  confirm_password: z.string().min(1, 'Password cannot be empty'),
+  agency: z.string().min(1, 'Donor Name cannot be empty'),
+  poc_name: z.string().min(1, 'Point of Contact Name should not be empty'),
+  poc_phone: z.string().min(1, 'Phone number is required'),
+});
 
-const beneficiarySignupScheme = z
-  .object({
-    email: z.string().email('Email is required'),
-    password: z.string().min(1, 'Password cannot be empty'),
-    confirm_password: z.string().min(1, 'Password cannot be empty'),
-    agency: z.string().min(1, 'Donor Name cannot be empty'),
-    poc_name: z.string().min(1, 'Point of Contact Name should not be empty'),
-    poc_phone: z.string().min(1, 'Phone number is required'),
-  })
-  .refine((input) => {
-    input.password === input.confirm_password,
-      {
-        message: `Passwords don't match!`,
-        path: ['confirm_password'],
-      };
-  });
-
-const adminSignupScheme = z
-  .object({
-    email: z.string().email('Email is required'),
-    password: z.string().min(1, 'Password cannot be empty'),
-    confirm_password: z.string().min(1, 'Password cannot be empty'),
-  })
-  .refine((input) => {
-    input.password === input.confirm_password,
-      {
-        message: `Passwords don't match!`,
-        path: ['confirm_password'],
-      };
-  });
+const adminSignupScheme = z.object({
+  email: z.string().email('Email is required'),
+  password: z.string().min(1, 'Password cannot be empty'),
+  confirm_password: z.string().min(1, 'Password cannot be empty'),
+});
 
 function Cards() {
   const router = useRouter();
@@ -128,54 +101,112 @@ function Cards() {
     z.infer<typeof beneficiarySignupScheme>
   >({
     resolver: zodResolver(beneficiarySignupScheme),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
   });
 
   const adminSignupForm = useForm<z.infer<typeof adminSignupScheme>>({
     resolver: zodResolver(adminSignupScheme),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
   });
 
   async function onSubmitDonorSignup(
     values: z.infer<typeof donorSignupScheme>
   ) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    if (values.password !== values.confirm_password) {
+      donorSignupForm.setError('confirm_password', {
+        type: 'manual',
+        message: `Passwords don't match!`,
+      });
+      return;
+    }
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    const user = await registerUser({
+      email: values.email,
+      password: values.password,
+      agency: values.agency,
+      uen: values.uen,
+      address: values.address,
+      poc_name: values.poc_name,
+      poc_phone: values.poc_phone,
+      halal_certification: values.halal_certified,
+      hygiene_certification: values.hygiene_certification,
+      role: 'donor',
+    });
+
+    if (user?.error) {
+      donorSignupForm.setError('root', {
+        type: 'manual',
+        message: user.error,
+      });
+    } else {
+      router.push('/login?type=donor');
+    }
   }
 
   async function onSubmitBeneficiarySignup(
     values: z.infer<typeof beneficiarySignupScheme>
   ) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    if (values.password !== values.confirm_password) {
+      beneficiarySignupForm.setError('confirm_password', {
+        type: 'manual',
+        message: `Passwords don't match!`,
+      });
+      return;
+    }
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    const user = await registerUser({
+      email: values.email,
+      password: values.password,
+      agency: values.agency,
+      uen: '',
+      address: '',
+      poc_name: values.poc_name,
+      poc_phone: values.poc_phone,
+      halal_certification: false,
+      hygiene_certification: 'D',
+      role: 'beneficiary',
+    });
+
+    if (user?.error) {
+      beneficiarySignupForm.setError('root', {
+        type: 'manual',
+        message: user.error,
+      });
+    } else {
+      router.push('/login?type=beneficiary');
+    }
   }
 
   async function onSubmitAdminSignup(
     values: z.infer<typeof adminSignupScheme>
   ) {
-    sessionStorage.setItem('currentUser', '');
-    router.push('/dashboard');
+    if (values.password !== values.confirm_password) {
+      adminSignupForm.setError('confirm_password', {
+        type: 'manual',
+        message: `Passwords don't match!`,
+      });
+      return;
+    }
 
-    //   form.setError('root', {
-    //     type: 'manual',
-    //     message: 'The provided credentials are invalid. Please try again.',
-    //   });
+    const user = await registerUser({
+      email: values.email,
+      password: values.password,
+      agency: '',
+      uen: '',
+      address: '',
+      poc_name: '',
+      poc_phone: '',
+      halal_certification: false,
+      hygiene_certification: 'D',
+      role: 'admin',
+    });
+
+    if (user?.error) {
+      adminSignupForm.setError('root', {
+        type: 'manual',
+        message: user.error,
+      });
+    } else {
+      router.push('/login?type=admin');
+    }
   }
 
   function updateUrlHistory(render: string) {
