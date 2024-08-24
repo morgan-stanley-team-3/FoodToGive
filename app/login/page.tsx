@@ -459,6 +459,11 @@ function Cards() {
 }
 
 export default function Home() {
+  if (useSession().data) {
+    const router = useRouter();
+    router.push('/dashboard');
+  }
+
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       <Header />

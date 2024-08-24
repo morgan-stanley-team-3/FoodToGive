@@ -33,6 +33,7 @@ import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { getSession, useSession } from 'next-auth/react';
 
 {
   /* Custom imports */
@@ -45,8 +46,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import Header from '../../components/Header';
 import { registerUser } from '@/actions/signup';
-import mongoose from 'mongoose';
-import User from '@/models/User';
 
 const donorSignupScheme = z.object({
   email: z.string().email('Email is required'),
@@ -767,6 +766,11 @@ function Cards() {
 }
 
 export default function Home() {
+  if (useSession().data) {
+    const router = useRouter();
+    router.push('/dashboard');
+  }
+
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       <Header />
