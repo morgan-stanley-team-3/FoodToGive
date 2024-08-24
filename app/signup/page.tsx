@@ -220,7 +220,7 @@ function Cards() {
         <div className='flex flex-col items-center p-4 mb-4'>
           <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
-            <TabsList className='grid w-full grid-cols-3 bg-green-50'>
+            <TabsList className='grid w-full grid-cols-3 bg-white'>
               <TabsTrigger
                 className='data-[state=active]:text-white data-[state=active]:bg-green-600'
                 value='donor'
@@ -766,10 +766,11 @@ function Cards() {
 }
 
 export default function Home() {
-  if (useSession().data) {
-    const router = useRouter();
-    router.push('/dashboard');
-  }
+  const router = useRouter();
+
+  // if (useSession().data) {
+  //   router.push('/dashboard');
+  // }
 
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
