@@ -1,6 +1,6 @@
 "use client"; 
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
@@ -33,8 +33,16 @@ import {
 } from "@/components/ui/select"
 import PostLoginNavbar from '../components/PostLoginNavbar';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import Header from '@/components/Header';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 const Donate = () => {
+
+  const {data: session, status} = useSession();
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -110,31 +118,49 @@ const Donate = () => {
     },
   });
 
+  // Helper function to convert file to Base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    console.log("convertToBase64 called with file:", file.name);
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result?.toString().split(',')[1];
+        console.log("Base64 String:", base64String);
+        resolve(base64String || '');
+      };
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   async function onSubmit(values: any) {
     console.log(values);
 
-    // make api call to save donation details in mongodb 
-    // we also need to add user from session storage to the object to send to API 
-    // const user = sessionStorage.getItem('user');
-    // if (!user) { 
-    //   console.error('User not found in session storage');
-    //   return; 
-    // }
-    // const parsedUser = JSON.parse(user);
-
     // Convert image files to Base64
-    // const base64Images = await Promise.all(
-    //   values.foodImages.map(async (file: File) => {
-    //     const base64String = await convertToBase64(file);
-    //     return base64String;
-    //   })
-    // );
+    const base64Images = await Promise.all(
+      values.foodImages.map(async (file: File) => {
+        const base64String = await convertToBase64(file);
+        console.log(base64String);
+        return base64String;
+      })
+    );
+    values.foodImages = base64Images;
+    
+    // make api call to save donation details in mongodb 
+    
+    if (!session) { 
+      console.error('User not found in session storage');
+      return; 
+    }
+    const parsedUser = JSON.parse(session.user);
 
-    // values.foodImages = base64Images;
 
     const data = { 
       ...values,
-      // donor: parsedUser, 
+      donor: parsedUser, 
       foodType: foodType
     }
 
@@ -154,6 +180,10 @@ const Donate = () => {
 
       const result = await response.json()
       console.log('Donation submitted successfully: ', result);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
 
       if (foodType === "Cooked Food") { 
         cookedForm.reset({
@@ -184,19 +214,6 @@ const Donate = () => {
 
   }
 
-  // // Helper function to convert file to Base64
-  // const convertToBase64 = (file: File): Promise<string> => {
-  //   return new Promise<string>((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       const base64String = reader.result?.toString().split(',')[1];
-  //       resolve(base64String || '');
-  //     };
-  //     reader.onerror = reject;
-  //     reader.readAsDataURL(file);
-  //     console.log("convertToBase64 called")
-  //   });
-  // };
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [foodType, setFoodType] = useState("Non-Cooked Food");
@@ -208,7 +225,12 @@ const Donate = () => {
     if (files) { 
       const previews = files.map((file) => URL.createObjectURL(file));
       setPreviewImages(previews);
-      cookedForm.setValue("foodImages", files); // Store files in the form state
+      if (foodType === "Non-Cooked Food") { 
+        nonCookedForm.setValue("foodImages", files);
+      } else{ 
+        cookedForm.setValue("foodImages", files); // Store files in the form state
+      }
+      
     }
   };
 
@@ -334,6 +356,7 @@ const Donate = () => {
                       <Input
                         type="file"
                         multiple
+                        ref={fileInputRef} 
                         accept="image/*"
                         className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
                         onChange={handleFileChange}
@@ -402,13 +425,13 @@ const Donate = () => {
                             <FormControl>
                               <RadioGroupItem value="pickup" />
                             </FormControl>
-                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                            <FormLabel className="font-normal">Scheduled Pickup</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
                               <RadioGroupItem value="selfDeliver" />
                             </FormControl>
-                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                            <FormLabel className="font-normal">Self-Delivery</FormLabel>
                           </FormItem>
                         </RadioGroup>
                       </FormControl>
@@ -557,6 +580,7 @@ const Donate = () => {
                       <Input
                         type="file"
                         multiple
+                        ref={fileInputRef} 
                         accept="image/*"
                         className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
                         onChange={handleFileChange}
@@ -626,13 +650,13 @@ const Donate = () => {
                             <FormControl>
                               <RadioGroupItem value="pickup" />
                             </FormControl>
-                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                            <FormLabel className="font-normal">Scheduled Pickup</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
                               <RadioGroupItem value="selfDeliver" />
                             </FormControl>
-                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                            <FormLabel className="font-normal">Self-Delivery</FormLabel>
                           </FormItem>
                         </RadioGroup>
                       </FormControl>
