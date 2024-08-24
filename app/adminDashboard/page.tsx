@@ -7,6 +7,7 @@ import MatchCard from "./MatchCard";
 import foodRequest from "./beneficiariesRequest";
 import donnorOffer from "./donnorOffer";
 import matches from "./matches";
+import Header from "../components/Header"; // Adjust the path as needed
 
 // Define the data type for food requests
 interface FoodRequest {
@@ -20,8 +21,6 @@ const Dashboard: React.FC = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  console.log(matches);
 
   const handleAccept = () => {
     console.log("Accepted");
@@ -40,34 +39,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen p-8">
-      <header className="flex justify-between items-center mb-12 bg-white shadow-md p-4">
-        <div className="text-3xl font-bold text-green-600">
-          Food2Give - Singapore Food Bank{" "}
-        </div>
-        <nav className="space-x-6 text-lg">
-          <a href="/" className="text-gray-700 hover:text-green-600">
-            Home
-          </a>
-          <a href="/mission" className="text-gray-700 hover:text-green-600">
-            Our Mission
-          </a>
-          <a href="/values" className="text-gray-700 hover:text-green-600">
-            Our Values
-          </a>
-          <a href="/what-we-do" className="text-gray-700 hover:text-green-600">
-            What We Do
-          </a>
-          <a href="/donor-login" className="text-gray-700 hover:text-green-600">
-            Donor Login
-          </a>
-          <a
-            href="/beneficiary-login"
-            className="text-gray-700 hover:text-green-600"
-          >
-            Beneficiary Login
-          </a>
-        </nav>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto">
         <section className="bg-white rounded-lg shadow-lg p-12 mb-12">
