@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
     Card,
     CardBody,
@@ -13,19 +13,14 @@ import {
     FaQuestionCircle,
 } from "react-icons/fa";
 import { FaBowlFood } from "react-icons/fa6";
+import { Donation } from "./DonationDashboardClient";
 
-interface DonationProps {
-    donation: {
-        foodName: string;
-        timeOfPreparation: string;
-        timeOfConsumption: string;
-        ingredient: string;
-        perishable: string;
-        donationStatus: string;
-    };
+interface DonationCardProps {
+    donation: Donation;
 }
 
-const DonationCard: React.FC<DonationProps> = ({ donation }) => {
+const DonationCard: React.FC<DonationCardProps> = ({ donation }) => {
+    console.log(donation);
     return (
         <Card
             shadow={false}
@@ -55,6 +50,10 @@ const DonationCard: React.FC<DonationProps> = ({ donation }) => {
                 <Typography className="mb-2">
                     <FaQuestionCircle className="inline-block mr-2" />
                     Donation Status: {donation.donationStatus}
+                </Typography>
+                <Typography className="mb-2">
+                    <FaQuestionCircle className="inline-block mr-2" />
+                    Delivery Method: {donation.deliveryMethod}
                 </Typography>
             </CardBody>
             <CardFooter className="pt-0">

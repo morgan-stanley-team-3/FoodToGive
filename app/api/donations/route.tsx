@@ -40,23 +40,23 @@ export async function GET() {
         console.error("MongoDB connection error:", error);
         return NextResponse.json(
             { message: "Internal server error" },
-            { status: 500 }
+            { status: 404 }
         );
     }
 }
 
-export async function POST(req: Request) {
-    try {
-        const collection = await getCollection();
-        const donation = await req.json();
-        const result = await collection.insertOne(donation);
+// export async function POST(req: Request) {
+//     try {
+//         const collection = await getCollection();
+//         const donation = await req.json();
+//         const result = await collection.insertOne(donation);
 
-        return NextResponse.json(result, { status: 201 });
-    } catch (error) {
-        console.error("MongoDB connection error:", error);
-        return NextResponse.json(
-            { message: "Internal server error" },
-            { status: 500 }
-        );
-    }
-}
+//         return NextResponse.json(result, { status: 201 });
+//     } catch (error) {
+//         console.error("MongoDB connection error:", error);
+//         return NextResponse.json(
+//             { message: "Internal server error" },
+//             { status: 404 }
+//         );
+//     }
+// }
