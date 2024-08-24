@@ -24,7 +24,9 @@ const HomePage: React.FC = () => {
               <h2 className="text-2xl font-semibold mb-2">Work with Us</h2>
               <p className="text-gray-700 mb-4">Create your profile and begin listing your business as a donor!</p>
               <button
+
                 className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
+
                 onClick={() => router.push('/mission')}
               >
                 Get Started as a Donor
@@ -41,7 +43,9 @@ const HomePage: React.FC = () => {
             <h3 className="text-xl font-semibold mb-2">Our Mission</h3>
             <p className="text-gray-700 mb-4">We strive to eliminate food wastage by redistributing excess food to those in need.</p>
             <button
+
               className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
+
               onClick={() => router.push('/mission')}
             >
               Learn More
@@ -54,7 +58,9 @@ const HomePage: React.FC = () => {
             <h3 className="text-xl font-semibold mb-2">Our Values</h3>
             <p className="text-gray-700 mb-4">We value sustainability, compassion, and community support.</p>
             <button
+
               className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
+
               onClick={() => router.push('/values')}
             >
               Explore Values
@@ -67,7 +73,9 @@ const HomePage: React.FC = () => {
             <h3 className="text-xl font-semibold mb-2">What We Do</h3>
             <p className="text-gray-700 mb-4">We collect surplus food from businesses and distribute it to charities and families in need.</p>
             <button
+
               className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
+
               onClick={() => router.push('/what-we-do')}
             >
               Discover More
