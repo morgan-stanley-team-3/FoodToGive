@@ -49,6 +49,7 @@ export const userOptions: NextAuthOptions = {
         token.halal_certification = user.halal_certification;
         token.hygiene_certification = user.hygiene_certification;
         token.role = user.role;
+        token.email = user.email;
       }
       return token;
     },
@@ -62,6 +63,7 @@ export const userOptions: NextAuthOptions = {
         session.user.halal_certification = token.halal_certification;
         session.user.hygiene_certification = token.hygiene_certification;
         session.user.role = token.role;
+        session.user.email = token.email;
       }
 
       return session;
