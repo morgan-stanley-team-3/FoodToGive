@@ -27,7 +27,7 @@ const HomePage: React.FC = () => {
                 Create your profile and begin listing your business as a donor!
               </p>
               <button
-                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+                className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
                 onClick={() => router.push('/mission')}
               >
                 Get Started as a Donor
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
               to those in need.
             </p>
             <button
-              className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+              className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
               onClick={() => router.push('/mission')}
             >
               Learn More
@@ -70,7 +70,7 @@ const HomePage: React.FC = () => {
               We value sustainability, compassion, and community support.
             </p>
             <button
-              className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+              className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
               onClick={() => router.push('/values')}
             >
               Explore Values
@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
               charities and families in need.
             </p>
             <button
-              className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+              className="bg-[#A2C765] text-white px-4 py-2 rounded hover:bg-[#8FA556]"
               onClick={() => router.push('/what-we-do')}
             >
               Discover More
