@@ -190,8 +190,9 @@ function Cards() {
         <div className='flex flex-col items-center p-4 mb-4'>
           <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
-            <TabsList className='grid w-full grid-cols-3'>
+            <TabsList className='grid w-full grid-cols-3 bg-green-50'>
               <TabsTrigger
+                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
                 value='donor'
                 onClick={() => {
                   updateUrlHistory('donor');
@@ -200,6 +201,7 @@ function Cards() {
                 Donor Sign Up
               </TabsTrigger>
               <TabsTrigger
+                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
                 value='beneficiary'
                 onClick={() => {
                   updateUrlHistory('beneficiary');
@@ -208,6 +210,7 @@ function Cards() {
                 Beneficiary Sign Up
               </TabsTrigger>
               <TabsTrigger
+                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
                 value='admin'
                 onClick={() => {
                   updateUrlHistory('admin');
