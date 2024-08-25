@@ -14,6 +14,7 @@ import {
 import DonationCard from './DonationCard'; // Ensure correct import path
 import Header from '@/components/Header'; // Adjust the path as needed
 import Link from 'next/link';
+import { getSession } from 'next-auth/react';
 
 export interface Donation {
   foodName: string;
@@ -35,10 +36,16 @@ export default function DonorDashboardClient() {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     async function fetchDonations() {
       try {
-        const response = await axios.get('/api/donations'); // Adjust the API endpoint as needed
+        const session = await getSession()
+        const email = session?.user.email
+        console.log(email)
+        const response = await axios.get(`/api/donations?email=${email}`);
+
+        // const response = await axios.get('/api/donations'); // Adjust the API endpoint as needed
         setDonations(response.data);
         console.log(response.data);
         console.log(donations);
@@ -59,9 +66,6 @@ export default function DonorDashboardClient() {
     return <div>Loading...</div>;
   }
 
-  if (!donations.length) {
-    return <div>No donations found.</div>;
-  }
 
   return (
     <div className='bg-gray-50 min-h-screen p-8'>

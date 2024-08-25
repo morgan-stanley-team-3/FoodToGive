@@ -30,7 +30,6 @@ export async function GET(request: Request) {
     // 1. urgency -> the request w the most urgent needByTime is prioritised
     // 2. match quality -> with the same level of urgency, the match w the highest score is chosen 
     
-    
   } catch { 
 
   } finally {

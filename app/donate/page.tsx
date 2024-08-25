@@ -33,11 +33,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import PostLoginNavbar from '../components/PostLoginNavbar';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import Header from '@/components/Header';
 import { useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 
 
 const Donate = () => {
@@ -168,6 +167,7 @@ const Donate = () => {
     values.foodImages = base64Images;
 
     const session = await getSession();
+    console.log(session?.user)
     
     // make api call to save donation details in mongodb
     if (!session?.user) { 
@@ -175,6 +175,7 @@ const Donate = () => {
       return; 
     }
     // const parsedUser = JSON.parse(session.user);
+    console.log(session.user.email);
 
     // we need to retrieve the details from session.user and create a dictionary then pass into JSON input 
     const data = { 
@@ -191,7 +192,7 @@ const Donate = () => {
       }, 
       foodType: foodType
     }
-    console.log(foodType)
+    console.log(data)
 
     try { 
       // make api call to save donation details in mongodb 
@@ -266,7 +267,7 @@ const Donate = () => {
   return (
     <div className="bg-gray-100 min-h-screen p-8">
       {/* Navigation Bar */}
-      <PostLoginNavbar/>
+      <Header/>
 
 
       {/* Form Content */}
@@ -275,7 +276,7 @@ const Donate = () => {
         <h1 className="text-2xl font-bold mb-2">Donate Food</h1>
         <p className="text-sm text-gray-700 mb-7">Help us make a difference, one meal at a time. Share your food today!</p>
         <div className="absolute top-9 left-10">
-          <Button onClick={() => router.push('/dashboard')} variant="outline" size="sm" className="flex items-center border-none">
+          <Button onClick={() => router.push('/donorDashboard')} variant="outline" size="sm" className="flex items-center border-none">
             <ChevronLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
