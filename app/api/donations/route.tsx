@@ -1,5 +1,5 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Create a single instance of the MongoClient to be reused across requests
 const uri = process.env.MONGODB_URI as string;
@@ -24,10 +24,13 @@ async function getCollection() {
   return db.collection('donations');
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get('email');
     const collection = await getCollection();
-    const donations = await collection.find({}).toArray();
+    // find donations made by donor with user.email 
+    const donations = await collection.find({"user.email": email}).toArray();
     return NextResponse.json(donations, { status: 200 });
   } catch (error) {
     console.error('MongoDB connection error:', error);

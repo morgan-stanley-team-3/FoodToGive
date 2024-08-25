@@ -23,6 +23,7 @@ export interface Request {
     quantity: number;
     numberOfServings: number;
 }
+import { getSession } from 'next-auth/react';
 
 // prettier-ignore
 export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiaries: Request[]}) {
@@ -32,10 +33,13 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
     useEffect(() => {
         async function fetchRequests() {
             try {
-                const response = await axios.get("/api/requests"); // Adjust the API endpoint as needed
-                setRequests(response.data);
-                console.log(response.data);
-                console.log(requests);
+              const session = await getSession()
+              const email = session?.user.email
+              console.log(email)
+              const response = await axios.get(`/api/requests?email=${email}`);
+              setRequests(response.data);
+              console.log(response.data);
+              console.log(requests);
             } catch (error) {
                 console.error("Error fetching requests:", error);
             } finally {
