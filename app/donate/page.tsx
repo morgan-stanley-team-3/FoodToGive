@@ -38,6 +38,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Donate = () => {
   const { data: session, status } = useSession();
+  const { toast } = useToast();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -133,7 +134,6 @@ const Donate = () => {
   };
 
   async function onSubmit(values: any) {
-    const { toast } = useToast();
     console.log(values);
 
     // Convert image files to Base64
