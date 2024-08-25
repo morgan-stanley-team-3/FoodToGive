@@ -28,9 +28,18 @@ const Header: React.FC = () => {
         </div>
       </a>
       <nav className='space-x-6 text-lg'>
-        <a href='/' className='text-gray-700 hover:text-[#A2C765]'>
-          Home
-        </a>
+        {!sessionData.data?.user && (
+          <a href='/' className='text-gray-700 hover:text-[#A2C765]'>
+            Home
+          </a>
+        )}
+
+        {sessionData.data?.user && (
+          <a href={`${sessionData.data?.user.role}Dashboard`} className='text-gray-700 hover:text-[#A2C765]'>
+            Dashboard
+          </a>
+        )}
+
         <div
           className='relative inline-block text-gray-700'
           onMouseEnter={() => setDropdownOpen(true)}
