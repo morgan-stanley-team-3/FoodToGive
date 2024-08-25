@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardHeader,
@@ -10,31 +10,10 @@ import {
   Typography,
   Button,
   Avatar,
-<<<<<<< HEAD
 } from "@material-tailwind/react";
 import DonationCard from "./DonationCard"; // Ensure correct import path
-import Header from "../components/Header"; // Adjust the path as needed
+import Header from "@/components/Header"; // Adjust the path as needed
 import Link from "next/link";
-
-export interface Donation {
-  bestBeforeDate: string;
-  createdAt: string;
-  deliveryMethod: string;
-  dropOffTime: string;
-  foodCategory: string;
-  foodImages: string;
-  foodName: string;
-  foodType: string;
-  pickUpLocation: string;
-  pickUpTime: string;
-  quantity: string;
-  specialHandling: string;
-  _id: string;
-=======
-} from '@material-tailwind/react';
-import DonationCard from './DonationCard'; // Ensure correct import path
-import Header from '@/components/Header'; // Adjust the path as needed
-import Link from 'next/link';
 
 export interface Donation {
   foodName: string;
@@ -49,7 +28,6 @@ export interface Donation {
   pickUpLocation: string;
   specialHandling: string;
   deliveryMethod: string;
->>>>>>> 42a61304da8d99d894fd98e05dced8c1b6a8b1c3
 }
 
 // prettier-ignore
@@ -132,9 +110,9 @@ export default function DonorDashboardClient() {
                     </Card> 
         </div>
 
-        {/* Right Column for Donation Cards */}
-        <div className='flex-1 min-w-[70%]'>
-          <h1 className='text-2xl font-bold mb-4 text-black'>My donations</h1>
+ {/* Right Column for Donation Cards */}
+ <div className='flex-1 min-w-[70%] h-[80vh] overflow-y-auto'>
+          <h1 className='text-2xl font-bold mb-4 text-black'>My Donations</h1>
           {donations.map((donation, index) => (
             <DonationCard
               key={index} // Add a unique key prop here

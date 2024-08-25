@@ -7,8 +7,7 @@ import MatchCard from "./MatchCard";
 // import foodRequest from "./beneficiariesRequest";
 // import donnorOffer from "./donnorOffer";
 import matches from "./matches";
-<<<<<<< HEAD
-import Header from "../components/Header"; // Adjust the path as needed
+import Header from "@/components/Header"; // Adjust the path as needed
 import { FaHandsHelping, FaHandHolding } from "react-icons/fa"; // Import Font Awesome icons
 
 // import MapComponent from "./map";
@@ -18,9 +17,6 @@ import dynamic from "next/dynamic";
 const MapComponent = dynamic(() => import("./map"), {
   ssr: false,
 });
-=======
-import Header from "@/components/Header"; // Adjust the path as needed
->>>>>>> 42a61304da8d99d894fd98e05dced8c1b6a8b1c3
 
 // Define the data type for food requests
 interface FoodRequest {
