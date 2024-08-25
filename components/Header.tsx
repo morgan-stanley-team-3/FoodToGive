@@ -43,6 +43,13 @@ const Header: React.FC = () => {
           </a>
         )}
 
+        <a
+          href='/chatbot'
+          className='block px-4 py-2 hover:bg-gray-100 hover:text-[#A2C765]'
+        >
+          Chatbot
+        </a>
+
         <div
           className='relative inline-block text-gray-700'
           onMouseEnter={() => setDropdownOpen(true)}
@@ -70,12 +77,6 @@ const Header: React.FC = () => {
                 className='block px-4 py-2 hover:bg-gray-100 hover:text-[#A2C765]'
               >
                 What We Do
-              </a>
-              <a
-                href='/chatbot'
-                className='block px-4 py-2 hover:bg-gray-100 hover:text-[#A2C765]'
-              >
-                Chatbot
               </a>
             </div>
           )}
