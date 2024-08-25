@@ -8,6 +8,9 @@ const PostLoginNavbar: React.FC = () => {
       <nav className="space-x-6 text-lg">
         <a href="/homepage" className="text-gray-700 hover:text-green-600">Home</a>
         <a href="/account" className="text-gray-700 hover:text-green-600">Account</a>
+        <a href='/chatbot' className='text-gray-700 hover:text-green-600'>
+          Chat
+        </a>
       </nav>
     </header>
   );

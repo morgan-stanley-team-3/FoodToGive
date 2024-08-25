@@ -27,6 +27,9 @@ const Header: React.FC = () => {
         <a href='/signup' className='text-gray-700 hover:text-green-600'>
           Sign Up
         </a>
+        <a href='/chatbot' className='text-gray-700 hover:text-green-600'>
+          Chat
+        </a>
       </nav>
     </header>
   );
