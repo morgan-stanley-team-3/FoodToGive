@@ -29,11 +29,9 @@ const MatchCard: React.FC<MatchCardProps> = ({
     <div className="flex items-center p-4 border border-gray-200 rounded-lg shadow-md bg-white">
       {/* Donor Section */}
       <div className="flex flex-col items-center flex-1 text-center p-2">
-        <img
-          src={donorPic}
-          alt={`${donorName}'s picture`}
-          className="w-16 h-16 rounded-full object-cover border-2 border-green-600"
-        />
+        <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-green-600 bg-white text-green-600">
+          <p className="font-semibold">Donor</p>
+        </div>
         <h2 className="mt-2 font-semibold text-gray-800">{donorName}</h2>
       </div>
 
@@ -69,11 +67,9 @@ const MatchCard: React.FC<MatchCardProps> = ({
 
       {/* Beneficiary Section */}
       <div className="flex flex-col items-center flex-1 text-center p-2">
-        <img
-          src={beneficiaryPic}
-          alt={`${beneficiaryName}'s picture`}
-          className="w-16 h-16 rounded-full object-cover border-2 border-green-600"
-        />
+        <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-green-600 bg-white text-green-600">
+          <p className="font-semibold">To</p>
+        </div>
         <h2 className="mt-2 font-semibold text-gray-800">{beneficiaryName}</h2>
       </div>
     </div>

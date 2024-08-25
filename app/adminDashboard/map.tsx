@@ -8,7 +8,8 @@ import {
   Popup,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import polyline from "@mapbox/polyline";
+// import polyline from "@mapbox/polyline";
+const polyline = require("@mapbox/polyline") as any;
 // Import customIcon if you have it, otherwise remove the icon prop in Marker
 // import customIcon from './path-to-your-icon';
 
@@ -17,7 +18,19 @@ const customIcon = new L.Icon({
   iconSize: [32, 32],
 });
 
-const RouteLayer = ({ routeData, decodedPolyline, color, isVisible }) => {
+interface RouteLayerProps {
+  routeData: any; // Replace 'any' with the correct type if you know it
+  decodedPolyline: any; // Replace 'any' with the correct type if you know it
+  color: string;
+  isVisible: boolean;
+}
+
+const RouteLayer: React.FC<RouteLayerProps> = ({
+  routeData,
+  decodedPolyline,
+  color,
+  isVisible,
+}) => {
   if (!isVisible) return null;
 
   return (
@@ -90,16 +103,23 @@ const MapComponent: React.FC = () => {
 
   return (
     <>
-      <section className="bg-white rounded-lg shadow-lg p-12 mb-12">
+      <section>
         <h1 className="text-4xl font-bold text-center mb-8 text-[#A2C765]">
           Routes Generated
         </h1>
 
+        <p className="text-lg text-gray-700 mb-8 text-center">
+          Approved match transfers will undergo an algorithmic evaluation to
+          determine the most efficient delivery method. Factors such as
+          location, food availability, timing, and other logistical
+          considerations will be taken into account.{" "}
+        </p>
+
         {routesData1.length > 0 && (
           <MapContainer
             center={[1.3521, 103.8198]}
-            zoom={13}
-            style={{ height: "100vh" }}
+            zoom={12}
+            style={{ height: "48vh" }}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -121,7 +141,7 @@ const MapComponent: React.FC = () => {
             <RouteLayer
               routeData={routesData3}
               decodedPolyline={decodedPolyline3}
-              color="yellow"
+              color="orange"
               isVisible={isRouteVisible[2]}
             />
           </MapContainer>
@@ -136,8 +156,8 @@ const MapComponent: React.FC = () => {
               onClick={() => toggleRouteVisibility(index)}
             >
               {isRouteVisible[index]
-                ? `Hide Route ${index + 1}`
-                : `Show Route ${index + 1}`}
+                ? `Hide Bus ${index + 1}`
+                : `Show Bus ${index + 1}`}
             </button>
           ))}
         </div>
