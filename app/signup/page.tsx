@@ -33,6 +33,7 @@ import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/use-toast';
 import { getSession, useSession } from 'next-auth/react';
 
 {
@@ -217,7 +218,7 @@ function Cards() {
   return (
     <section className='h-full w-full flex flex-col items-center'>
       <div className='container mx-auto'>
-        <div className='flex flex-col items-center p-4 mb-4'>
+        <div className='flex flex-col items-center mb-4'>
           <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3 bg-white'>
@@ -482,7 +483,7 @@ function Cards() {
                       )}
 
                       <Button
-                        className='w-full mt-4 bg-[#A2C765]'
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
                         type='submit'
                       >
                         Sign Up
@@ -644,7 +645,7 @@ function Cards() {
                       )}
 
                       <Button
-                        className='w-full mt-4 bg-[#A2C765]'
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
                         type='submit'
                       >
                         Sign Up
@@ -748,7 +749,7 @@ function Cards() {
                       )}
 
                       <Button
-                        className='w-full mt-4 bg-[#A2C765]'
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
                         type='submit'
                       >
                         Sign Up

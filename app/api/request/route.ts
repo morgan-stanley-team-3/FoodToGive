@@ -22,41 +22,36 @@ export async function POST(request: Request) {
   try {
     await client.connect();
     const body = await request.json();
-    const donations = client.db('database').collection('donations');
+    const donations = client.db('database').collection('requests');
 
     if (body.foodType === 'Non-Cooked Food') {
       const {
-        donor,
+        beneficiary,
         foodType,
         deliveryMethod,
-        dropOffTime,
-        bestBeforeDate,
+        needByTime,
         foodCategory,
-        foodImages,
         foodName,
-        pickUpLocation,
-        pickUpTime,
+        deliveryLocation,
+        deliveryTime,
         quantity,
-        specialHandling,
+        specialRequest,
         agencyName,
-        // donor
       } = body;
 
       // create a new donation object
       const newDonation = {
-        deliveryMethod,
-        dropOffTime: dropOffTime || null,
-        bestBeforeDate,
-        foodCategory,
-        foodImages,
-        foodName,
+        beneficiary,
         foodType,
-        pickUpLocation: pickUpLocation || null,
-        pickUpTime: pickUpTime || null,
+        deliveryMethod,
+        needByTime,
+        foodCategory,
+        foodName,
+        deliveryLocation,
+        deliveryTime,
         quantity,
-        specialHandling,
-        agencyName: agencyName || '',
-        createdAt: new Date(),
+        specialRequest,
+        agencyName,
       };
 
       // Insert the new donation into the "donations" collection
@@ -68,37 +63,33 @@ export async function POST(request: Request) {
     } else {
       // foodType is cooked food
       const {
-        donor,
+        beneficiary,
         foodType,
         deliveryMethod,
-        dropOffTime,
-        consumeByTiming,
-        timePrepared,
-        foodImages,
+        needByTime,
+        foodCategory,
         foodName,
-        pickUpLocation,
-        pickUpTime,
+        deliveryLocation,
+        deliveryTime,
         numberOfServings,
-        specialHandling,
+        specialRequest,
         agencyName,
       } = body;
 
       // create new donation object
       const newDonation = {
-        donor,
+        beneficiary,
         foodType,
         deliveryMethod,
-        dropOffTime: dropOffTime || null,
-        consumeByTiming,
-        timePrepared,
-        foodImages,
+        needByTime: needByTime || null,
+        foodCategory,
         foodName,
-        pickUpLocation: pickUpLocation || null,
-        pickUpTime: pickUpTime || null,
+        deliveryLocation: deliveryLocation || null,
+        deliveryTime: deliveryTime || null,
         numberOfServings,
-        specialHandling,
-        agencyName: agencyName || '',
+        specialRequest,
         createdAt: new Date(),
+        agencyName,
       };
 
       // Insert the new donation into the "donations" collection

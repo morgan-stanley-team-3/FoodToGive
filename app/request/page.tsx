@@ -27,14 +27,16 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 const Request = () => {
-  const session = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const { toast } = useToast();
 
-  // if (!session.data) {
+  // if (!session?.user) {
   //   router.replace('/');
-  // } else if (session.data.user.role !== 'donor') {
+  // } else if (session?.user.role !== 'donor') {
   //   router.replace('/dashboard');
   // }
 
@@ -77,7 +79,6 @@ const Request = () => {
     resolver: zodResolver(cookedFormSchema),
     defaultValues: {
       foodName: '',
-      needByTime: '',
       specialRequest: '',
       numberOfServings: 0,
     },
@@ -87,35 +88,77 @@ const Request = () => {
     resolver: zodResolver(nonCookedFormSchema),
     defaultValues: {
       foodName: '',
-      needByTime: '',
       foodCategory: '',
       specialRequest: '',
       quantity: 0,
     },
   });
 
-  function onSubmit(values: any) {
+  async function onSubmit(values: any) {
     // make api call to save donation details in mongodb
-    if (foodType === 'Cooked Food') {
-      cookedForm.reset({
-        foodName: '',
-        needByTime: '',
-        specialRequest: '',
-        numberOfServings: 0,
-        deliveryMethod: '',
+    if (!session) {
+      // The user is not found in the session storage, should be prevented by the router
+      return;
+    }
+
+    const parsedUser = JSON.parse(session.user);
+
+    const data = {
+      ...values,
+      beneficiary: parsedUser,
+      foodType: foodType,
+      agencyName: parsedUser.agency,
+    };
+
+    try {
+      // make api call to save donation details in mongodb
+      const response = await fetch('/api/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
-    } else {
-      nonCookedForm.reset({
-        foodName: '',
-        needByTime: '',
-        foodCategory: '',
-        specialRequest: '',
-        quantity: 0,
-        deliveryMethod: '',
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit donation: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('Donation submitted successfully: ', result);
+
+      if (foodType === 'Cooked Food') {
+        cookedForm.reset({
+          foodName: '',
+          specialRequest: '',
+          numberOfServings: 0,
+          deliveryMethod: '',
+        });
+      } else {
+        nonCookedForm.reset({
+          foodName: '',
+          foodCategory: '',
+          specialRequest: '',
+          quantity: 0,
+          deliveryMethod: '',
+        });
+        setSelectedCategory('');
+
+        toast({
+          title: 'Success!',
+          description: 'Your donation request has been submitted successfully.',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error!',
+        description:
+          'Your donation request has failed. Please try again later. Error: ' +
+          error,
       });
-      setSelectedCategory('');
     }
   }
+
   const [selectedCategory, setSelectedCategory] = useState('');
   const [foodType, setFoodType] = useState('Non-Cooked Food');
 
@@ -138,7 +181,7 @@ const Request = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Non-Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Non-Cooked Food')}
@@ -148,7 +191,7 @@ const Request = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Cooked Food')}
@@ -401,7 +444,7 @@ const Request = () => {
                 />
 
                 <FormField
-                  control={cookedForm.control}
+                  control={nonCookedForm.control}
                   name='needByTime'
                   render={({ field }) => (
                     <FormItem>

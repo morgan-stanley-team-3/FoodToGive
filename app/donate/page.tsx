@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
   CarouselContent,
@@ -35,6 +34,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 const Donate = () => {
   const { data: session, status } = useSession();
@@ -133,6 +133,7 @@ const Donate = () => {
   };
 
   async function onSubmit(values: any) {
+    const { toast } = useToast();
     console.log(values);
 
     // Convert image files to Base64
@@ -157,6 +158,7 @@ const Donate = () => {
       ...values,
       donor: parsedUser,
       foodType: foodType,
+      agencyName: parsedUser.agency,
     };
 
     try {
@@ -203,8 +205,18 @@ const Donate = () => {
         setSelectedCategory('');
         setPreviewImages([]);
       }
+
+      toast({
+        title: 'Success!',
+        description: 'Your donation request has been submitted successfully.',
+      });
     } catch (error) {
-      console.error('Error submitting donation: ', error);
+      toast({
+        title: 'Error!',
+        description:
+          'Your donation request has failed. Please try again later. Error: ' +
+          error,
+      });
     }
   }
 
@@ -244,7 +256,7 @@ const Donate = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Non-Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Non-Cooked Food')}
@@ -254,7 +266,7 @@ const Donate = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Cooked Food')}
