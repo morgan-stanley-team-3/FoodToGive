@@ -101,13 +101,12 @@ const Request = () => {
       return;
     }
 
-    const parsedUser = JSON.parse(session.data?.user);
-    console.log('User: ', parsedUser);
+    console.log(session.data?.user);
 
     const data = {
       ...values,
       foodType: foodType,
-      agencyName: parsedUser.agency,
+      agencyName: session.data?.user.agency,
     };
 
     try {
