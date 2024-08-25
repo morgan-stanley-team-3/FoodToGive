@@ -32,7 +32,7 @@ export interface Donation {
 }
 
 // prettier-ignore
-export default function DonorDashboardClient() {
+export default function DonorDashboardClient({donation}: {donation: any}) {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,34 +83,50 @@ export default function DonorDashboardClient() {
 
       <div className='flex gap-8'>
         <div className='flex-1 min-w-[30%]'>
-          {/* <Card
+          <Card
+            placeholder=""
+            onPointerEnterCapture={() => {}}
+            onPointerLeaveCapture={() => {}}
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
                     >
                         <CardHeader
-                            floated={false}
-                            shadow={false}
-                            color="transparent"
-                            className="absolute inset-0 m-0 h-full w-full rounded-none bg-[url('https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80')] bg-cover bg-center"
-                        >
+                          floated={false}
+                          shadow={false}
+                          color="transparent"
+                          className="absolute inset-0 m-0 h-full w-full rounded-none bg-[url('https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80')] bg-cover bg-center"
+                          placeholder=''
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}                        >
                             <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/50" />
                         </CardHeader>
-                        <CardBody className="relative py-14 px-6 md:px-12">
+                        <CardBody
+                          className="relative py-14 px-6 md:px-12"
+                          placeholder=""
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                        >
                             <Typography
-                                variant="h2"
-                                color="white"
-                                className="mb-6 font-medium leading-[1.5]"
+                              variant="h2"
+                              color="white"
+                              className="mb-6 font-medium leading-[1.5]"
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
                             >
-                                Welcome Back
+                              Welcome Back
                             </Typography>
                             <Typography
-                                variant="h5"
-                                className="mb-4 text-gray-400"
+                              variant="h5"
+                              className="mb-4 text-gray-400"
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
                             >
-                                Tania Andrew
+                              Tania Andrew
                             </Typography>
                         </CardBody>
-                    </Card> */}
+                    </Card>
         </div>
 
         {/* Right Column for Donation Cards */}
