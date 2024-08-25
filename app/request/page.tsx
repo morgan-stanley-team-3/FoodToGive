@@ -106,7 +106,6 @@ const Request = () => {
 
     const data = {
       ...values,
-      beneficiary: parsedUser,
       foodType: foodType,
       agencyName: parsedUser.agency,
     };
