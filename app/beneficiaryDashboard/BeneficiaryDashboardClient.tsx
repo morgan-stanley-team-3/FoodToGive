@@ -101,7 +101,7 @@ export default function BeneficiaryDashboardClient() {
                     </Card>
                 </div>
 
-                <div className="flex-1 min-w-[70%]">
+                <div className="flex-1 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto">
                     <h1 className="text-2xl font-bold mb-4 text-black">
                         My requests
                     </h1>
