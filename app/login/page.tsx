@@ -123,7 +123,7 @@ function Cards() {
         });
       } else {
         console.log('REDIRECTING TO BENEFICIARY');
-        router.push('/beneficiaryDashboard');
+        // router.push('/beneficiaryDashboard');
       }
     }
   }
@@ -466,17 +466,6 @@ function Cards() {
 }
 
 export default function Home() {
-  const router = useRouter();
-  const session = useSession();
-
-  if (session.data?.user) {
-    console.log(session.data, session.data?.user);
-    if (session.data?.user.role === 'donor') router.push('/donorDashboard');
-    if (session.data?.user.role === 'beneficiary')
-      router.push('/beneficiaryDashboard');
-    if (session.data?.user.role === 'admin') router.push('/adminDashboard');
-  }
-
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       <Header />
