@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.45",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
@@ -19,6 +20,7 @@
     "@material-tailwind/react": "^2.1.9",
     "@mui/material": "^5.16.7",
     "@radix-ui/react-checkbox": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-menubar": "^1.1.1",
@@ -26,26 +28,41 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
+    "ai": "^3.3.17",
     "axios": "^1.7.5",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+<<<<<<< HEAD
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.1.3",
     "embla-carousel-react": "^8.2.0",
     "leaflet": "^1.9.4",
+=======
+    "cmdk": "0.2.1",
+    "embla-carousel-react": "^8.2.0",
+    "framer-motion": "^11.3.30",
+>>>>>>> 42a61304da8d99d894fd98e05dced8c1b6a8b1c3
     "lucide-react": "^0.429.0",
     "moment": "^2.30.1",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.4",
     "next": "^14.2.6",
     "next-auth": "^4.24.7",
+    "pnpm": "^9.8.0",
+    "property-information": "^6.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "react-icon": "^1.0.0",
     "react-icons": "^5.3.0",
+<<<<<<< HEAD
     "react-leaflet": "^4.2.1",
+=======
+    "react-markdown": "^9.0.1",
+    "react-multi-select-component": "^4.3.4",
+>>>>>>> 42a61304da8d99d894fd98e05dced8c1b6a8b1c3
     "react-table": "^7.8.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",

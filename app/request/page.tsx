@@ -27,14 +27,16 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
 
 const Request = () => {
   const session = useSession();
   const router = useRouter();
+  const { toast } = useToast();
 
-  // if (!session.data) {
+  // if (!session?.user) {
   //   router.replace('/');
-  // } else if (session.data.user.role !== 'donor') {
+  // } else if (session?.user.role !== 'donor') {
   //   router.replace('/dashboard');
   // }
 
@@ -77,7 +79,6 @@ const Request = () => {
     resolver: zodResolver(cookedFormSchema),
     defaultValues: {
       foodName: '',
-      needByTime: '',
       specialRequest: '',
       numberOfServings: 0,
     },
@@ -87,35 +88,84 @@ const Request = () => {
     resolver: zodResolver(nonCookedFormSchema),
     defaultValues: {
       foodName: '',
-      needByTime: '',
       foodCategory: '',
       specialRequest: '',
       quantity: 0,
     },
   });
 
-  function onSubmit(values: any) {
-    // make api call to save donation details in mongodb
-    if (foodType === 'Cooked Food') {
-      cookedForm.reset({
-        foodName: '',
-        needByTime: '',
-        specialRequest: '',
-        numberOfServings: 0,
-        deliveryMethod: '',
+  async function onSubmit(values: any) {
+    // make api call to save request details in mongodb
+    if (!session.data?.user) {
+      // The user is not found in the session storage, should be prevented by the router
+      return;
+    }
+
+    const user = {
+      email: session.data?.user.email,
+      agency: session.data?.user.agency,
+      uen: session.data?.user.uen,
+      address: session.data?.user.address,
+      poc_name: session.data?.user.poc_name,
+      poc_phone: session.data?.user.poc_phone,
+      halal_certification: session.data?.user.halal_certification,
+      hygiene_certification: session.data?.user.hygiene_certification,
+      role: session.data?.user.role,
+    };
+
+    const data = {
+      ...values,
+      foodType: foodType,
+      user: user,
+    };
+
+    try {
+      // make api call to save request details in mongodb
+      const response = await fetch('/api/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
-    } else {
-      nonCookedForm.reset({
-        foodName: '',
-        needByTime: '',
-        foodCategory: '',
-        specialRequest: '',
-        quantity: 0,
-        deliveryMethod: '',
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit request: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (foodType === 'Cooked Food') {
+        cookedForm.reset({
+          foodName: '',
+          specialRequest: '',
+          numberOfServings: 0,
+          deliveryMethod: '',
+        });
+      } else {
+        nonCookedForm.reset({
+          foodName: '',
+          foodCategory: '',
+          specialRequest: '',
+          quantity: 0,
+          deliveryMethod: '',
+        });
+        setSelectedCategory('');
+
+        toast({
+          title: 'Success!',
+          description: 'Your request has been submitted successfully.',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error!',
+        description:
+          'Your request has failed. Please try again later. Error: ' + error,
       });
-      setSelectedCategory('');
     }
   }
+
   const [selectedCategory, setSelectedCategory] = useState('');
   const [foodType, setFoodType] = useState('Non-Cooked Food');
 
@@ -138,7 +188,7 @@ const Request = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Non-Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Non-Cooked Food')}
@@ -148,7 +198,7 @@ const Request = () => {
             <button
               className={`px-4 py-2 rounded-md font-semibold ${
                 foodType === 'Cooked Food'
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-[#A2C765] text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
               onClick={() => setFoodType('Cooked Food')}
@@ -249,18 +299,18 @@ const Request = () => {
                         >
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='selfPickup' />
+                              <RadioGroupItem value='Self-Collection' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              I will pick up the food
+                              Self-Collection
                             </FormLabel>
                           </FormItem>
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='deliverToMe' />
+                              <RadioGroupItem value='Scheduled Delivery' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              Please deliver the food to me
+                              Scheduled Delivery
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -270,7 +320,8 @@ const Request = () => {
                   )}
                 />
 
-                {cookedForm.watch('deliveryMethod') === 'deliverToMe' && (
+                {cookedForm.watch('deliveryMethod') ===
+                  'Scheduled Delivery' && (
                   <>
                     <FormField
                       control={cookedForm.control}
@@ -334,7 +385,7 @@ const Request = () => {
                   name='foodCategory'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Food Type</FormLabel>
+                      <FormLabel>Food Category</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value || ''}
@@ -344,7 +395,7 @@ const Request = () => {
                           }}
                         >
                           <SelectTrigger className='w-full shadow-sm'>
-                            <SelectValue placeholder='Select Food Type' />
+                            <SelectValue placeholder='Select Food Category' />
                           </SelectTrigger>
                           <SelectContent className='w-full'>
                             <SelectItem value='Vegetables'>
@@ -401,7 +452,7 @@ const Request = () => {
                 />
 
                 <FormField
-                  control={cookedForm.control}
+                  control={nonCookedForm.control}
                   name='needByTime'
                   render={({ field }) => (
                     <FormItem>
@@ -431,18 +482,18 @@ const Request = () => {
                         >
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='selfPickup' />
+                              <RadioGroupItem value='Self-Collection' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              I will pick up the food
+                              Self-Collection
                             </FormLabel>
                           </FormItem>
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='deliverToMe' />
+                              <RadioGroupItem value='Scheduled Delivery' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              Please deliver the food to me
+                              Scheduled Delivery
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -452,7 +503,8 @@ const Request = () => {
                   )}
                 />
 
-                {nonCookedForm.watch('deliveryMethod') === 'deliverToMe' && (
+                {nonCookedForm.watch('deliveryMethod') ===
+                  'Scheduled Delivery' && (
                   <>
                     <FormField
                       control={nonCookedForm.control}
