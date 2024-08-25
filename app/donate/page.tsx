@@ -32,11 +32,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
 import { useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 
 const Donate = () => {
   const router = useRouter();
@@ -168,6 +169,7 @@ const Donate = () => {
     values.foodImages = base64Images;
 
     const session = await getSession();
+    //     console.log(session?.user)
 
     // make api call to save donation details in mongodb
     if (!session?.user) {
@@ -175,6 +177,7 @@ const Donate = () => {
       return;
     }
     // const parsedUser = JSON.parse(session.user);
+    // console.log(session.user.email);
 
     // we need to retrieve the details from session.user and create a dictionary then pass into JSON input
     const data = {
@@ -187,11 +190,12 @@ const Donate = () => {
         poc_phone: session.user.poc_phone,
         halal_certification: session.user.halal_certification,
         hygeience_certification: session.user.hygiene_certification,
-        role: session.user.role,
-      },
-      foodType: foodType,
-    };
-    console.log(foodType);
+        role: session.user.role
+      }, 
+      foodType: foodType
+    }
+    console.log(data)
+
 
     try {
       // make api call to save donation details in mongodb
@@ -263,49 +267,44 @@ const Donate = () => {
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       {/* Navigation Bar */}
-      <Header />
+      <Header/>
+
 
       {/* Form Content */}
-      <section className='bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center relative'>
-        <div className='flex flex-col items-center w-full max-w-4xl'>
-          <h1 className='text-2xl font-bold mb-2'>Donate Food</h1>
-          <p className='text-sm text-gray-700 mb-7'>
-            Help us make a difference, one meal at a time. Share your food
-            today!
-          </p>
-          <div className='absolute top-9 left-10'>
-            <Button
-              onClick={() => router.push('/dashboard')}
-              variant='outline'
-              size='sm'
-              className='flex items-center border-none'
-            >
-              <ChevronLeft className='h-4 w-4 mr-2' />
-              Back
-            </Button>
-          </div>
-          <div className='flex justify-center space-x-4 mb-6'>
-            <button
-              className={`px-4 py-2 rounded-md font-semibold ${
-                foodType === 'Non-Cooked Food'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-              onClick={() => setFoodType('Non-Cooked Food')}
-            >
-              Non-Cooked Food
-            </button>
-            <button
-              className={`px-4 py-2 rounded-md font-semibold ${
-                foodType === 'Cooked Food'
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-              onClick={() => setFoodType('Cooked Food')}
-            >
-              Cooked Food
-            </button>
-          </div>
+      <section className="bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center relative">
+        <div className="flex flex-col items-center w-full max-w-4xl">
+        <h1 className="text-2xl font-bold mb-2">Donate Food</h1>
+        <p className="text-sm text-gray-700 mb-7">Help us make a difference, one meal at a time. Share your food today!</p>
+        <div className="absolute top-9 left-10">
+          <Button onClick={() => router.push('/donorDashboard')} variant="outline" size="sm" className="flex items-center border-none">
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        </div>
+        <div className="flex justify-center space-x-4 mb-6">
+
+          <button
+            className={`px-4 py-2 rounded-md font-semibold ${
+              foodType === "Non-Cooked Food" 
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+            onClick={() => setFoodType("Non-Cooked Food")}
+          >
+            Non-Cooked Food
+          </button>
+          <button
+            className={`px-4 py-2 rounded-md font-semibold ${
+              foodType === "Cooked Food" 
+                ? "bg-green-600 text-white"
+                : "bg-gray-100 text-gray-700"
+            }`}
+            onClick={() => setFoodType("Cooked Food")}
+          >
+            Cooked Food
+          </button>
+          
+        </div>
 
           {foodType === 'Cooked Food' ? (
             <Form key='cookedForm' {...cookedForm}>

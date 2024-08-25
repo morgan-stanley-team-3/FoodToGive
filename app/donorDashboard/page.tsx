@@ -15,7 +15,9 @@ export default async function DonorDashboardPage() {
     const donations = await res.json();
 
     return (
-        // Render the client component and pass the data as props
-        <DonationDashboardClient donation={donations} />
+        // Render the client component and pass the data as props        
+        <DonationDashboardClient />
+        // <DonationDashboardClient donation={donations} />
+
     );
 }
