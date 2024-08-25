@@ -1,11 +1,13 @@
 "use client"; 
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from "zod"
+import { string, z } from "zod"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Card, CardContent } from "@/components/ui/card"
+import { MultiSelect } from "react-multi-select-component";
+import { ChevronLeft } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -34,15 +36,24 @@ import {
 import PostLoginNavbar from '../components/PostLoginNavbar';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Header from '@/components/Header';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 
 const Donate = () => {
-
-  const {data: session, status} = useSession();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const options = [
+    { label: "Milk", value: "Milk" },
+    { label: "Eggs", value: "Eggs" },
+    { label: "Cheese", value: "Cheese"}, 
+    { label: "Peanuts", value: "Peanuts"},
+    { label: "Wheat", value: "Wheat"},
+    { label: "Sesame", value: "Sesame"},
+    { label: "Soy", value: "Soy"},
+    { label: "Shellfish (E.g. Lobster, prawn, crab)", value: "Shellfish"},
+    { label: "Fish", value: "Fish"},
+  ]
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -62,7 +73,8 @@ const Donate = () => {
     deliveryMethod: z.string(),
     pickUpTime: z.string().optional(), 
     pickUpLocation: z.string().optional(), 
-    dropOffTime: z.string().optional()
+    dropOffTime: z.string().optional(),
+    allergens: z.array(z.string()),
   });
 
   const nonCookedFormSchema = z.object({
@@ -98,7 +110,8 @@ const Donate = () => {
       deliveryMethod: "", 
       pickUpTime: "", 
       pickUpLocation: "", 
-      dropOffTime: ""
+      dropOffTime: "",
+      allergens: []
     },
   });
 
@@ -114,9 +127,13 @@ const Donate = () => {
       pickUpTime: "", 
       pickUpLocation: "", 
       dropOffTime: ""
-
     },
   });
+
+  const [allergens, setAllergens] = useState([]);
+  useEffect(() => {
+    cookedForm.setValue("allergens", allergens.map(item => item['value']));
+  }, [allergens]);
 
   // Helper function to convert file to Base64
   const convertToBase64 = (file: File): Promise<string> => {
@@ -136,9 +153,10 @@ const Donate = () => {
     });
   };
 
+
   async function onSubmit(values: any) {
     console.log(values);
-
+  
     // Convert image files to Base64
     const base64Images = await Promise.all(
       values.foodImages.map(async (file: File) => {
@@ -148,21 +166,32 @@ const Donate = () => {
       })
     );
     values.foodImages = base64Images;
+
+    const session = await getSession();
     
-    // make api call to save donation details in mongodb 
-    
-    if (!session) { 
+    // make api call to save donation details in mongodb
+    if (!session?.user) { 
       console.error('User not found in session storage');
       return; 
     }
-    const parsedUser = JSON.parse(session.user);
+    // const parsedUser = JSON.parse(session.user);
 
-
+    // we need to retrieve the details from session.user and create a dictionary then pass into JSON input 
     const data = { 
       ...values,
-      donor: parsedUser, 
+      user: {
+        email: session.user.email, 
+        agency: session.user.agency,
+        address: session.user.address,
+        poc_name: session.user.poc_name, 
+        poc_phone: session.user.poc_phone,
+        halal_certification: session.user.halal_certification, 
+        hygeience_certification: session.user.hygiene_certification,
+        role: session.user.role
+      }, 
       foodType: foodType
     }
+    console.log(foodType)
 
     try { 
       // make api call to save donation details in mongodb 
@@ -241,11 +270,16 @@ const Donate = () => {
 
 
       {/* Form Content */}
-      <section className="bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center">
+      <section className="bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center relative">
         <div className="flex flex-col items-center w-full max-w-4xl">
         <h1 className="text-2xl font-bold mb-2">Donate Food</h1>
         <p className="text-sm text-gray-700 mb-7">Help us make a difference, one meal at a time. Share your food today!</p>
-
+        <div className="absolute top-9 left-10">
+          <Button onClick={() => router.push('/dashboard')} variant="outline" size="sm" className="flex items-center border-none">
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        </div>
         <div className="flex justify-center space-x-4 mb-6">
 
           <button
@@ -274,7 +308,6 @@ const Donate = () => {
         {foodType === "Cooked Food" ? (
           <Form key="cookedForm" {...cookedForm}>
             <form onSubmit={cookedForm.handleSubmit(onSubmit)} className="space-y-4 w-full max-w-s mx-auto">
-
               {/* Information Card */}
               <div className="bg-green-100 p-9 rounded-lg shadow-lg">
                 <p className="text-gray-700 mb-2">
@@ -312,6 +345,27 @@ const Donate = () => {
                       <Input className="shadow-sm" type="datetime-local" {...field} />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField 
+                control={cookedForm.control}
+                name="allergens"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Allergens</FormLabel>
+                    <FormControl>
+                      <div className="flex h-10 w-full rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <MultiSelect
+                          className="w-full h-full"
+                          options={options}
+                          value={allergens}
+                          onChange={setAllergens}
+                          labelledBy="Select"
+                        />
+                      </div>
+                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -367,34 +421,38 @@ const Donate = () => {
                       <div className="flex justify-center my-4">
                         <Carousel
                           opts={{
-                            align: 'start',
+                            align:'center',
                           }}
                           className="w-full max-w-sm"
                         >
                           <CarouselContent>
                             {previewImages.map((src, index) => (
-                              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                              <CarouselItem
+                                key={index}
+                                // className={`md:basis-${12 / Math.min(previewImages.length, 3)} lg:basis-${12 / Math.min(previewImages.length, 3)}`}
+                              >
                                 <div className="p-1">
-                              
-                                      <Image
-                                        src={src}
-                                        width={244} 
-                                        height={244}
-                                        alt={`Food preview ${index + 1}`}
-                                        className="w-full h-auto rounded-md"
-                                      />
+                                  <Image
+                                    src={src}
+                                    object-fit="contain"
+                                    width={244}
+                                    height={244}
+                                    alt={`Food preview ${index + 1}`}
+                                    className="w-full h-auto rounded-md"
+                                  />
                                 </div>
                               </CarouselItem>
                             ))}
                           </CarouselContent>
-                          <CarouselPrevious type="button"/>
-                          <CarouselNext type="button"/>
+                          <CarouselPrevious type="button" />
+                          <CarouselNext type="button" />
                         </Carousel>
                       </div>
                     )}
                   </FormItem>
                 )}
               />
+
 
               <FormField
                 control={cookedForm.control}
@@ -423,13 +481,13 @@ const Donate = () => {
                         >
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
-                              <RadioGroupItem value="pickup" />
+                              <RadioGroupItem value="Scheduled Pickup" />
                             </FormControl>
                             <FormLabel className="font-normal">Scheduled Pickup</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
-                              <RadioGroupItem value="selfDeliver" />
+                              <RadioGroupItem value="Self-Delivery" />
                             </FormControl>
                             <FormLabel className="font-normal">Self-Delivery</FormLabel>
                           </FormItem>
@@ -440,7 +498,7 @@ const Donate = () => {
                   )}
                 />
 
-                {cookedForm.watch("deliveryMethod") === "pickup" && (
+                {cookedForm.watch("deliveryMethod") === "Scheduled Pickup" && (
                   <>
         
                     <FormField
@@ -472,7 +530,7 @@ const Donate = () => {
                   </>
                 )}
 
-                {cookedForm.watch("deliveryMethod") === "selfDeliver" && (
+                {cookedForm.watch("deliveryMethod") === "Self-Delivery" && (
                   <>
                     <FormField
                       control={cookedForm.control}
@@ -591,27 +649,30 @@ const Donate = () => {
                       <div className="flex justify-center my-4">
                         <Carousel
                           opts={{
-                            align: 'start',
+                            align:'center',
                           }}
                           className="w-full max-w-sm"
                         >
                           <CarouselContent>
                             {previewImages.map((src, index) => (
-                              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                              <CarouselItem
+                                key={index}
+                                // className={`md:basis-${12 / Math.min(previewImages.length, 3)} lg:basis-${12 / Math.min(previewImages.length, 3)}`}
+                              >
                                 <div className="p-1">
-                              
-                                      <Image
-                                        src={src}
-                                        width={244} 
-                                        height={244}
-                                        alt={`Food preview ${index + 1}`}
-                                        className="w-full h-auto rounded-md"
-                                      />
+                                  <Image
+                                    src={src}
+                                    object-fit="contain"
+                                    width={244}
+                                    height={244}
+                                    alt={`Food preview ${index + 1}`}
+                                    className="w-full h-auto rounded-md"
+                                  />
                                 </div>
                               </CarouselItem>
                             ))}
                           </CarouselContent>
-                          <CarouselPrevious type="button"/>
+                          <CarouselPrevious type="button" />
                           <CarouselNext type="button" />
                         </Carousel>
                       </div>
