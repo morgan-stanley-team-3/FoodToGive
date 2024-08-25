@@ -1,33 +1,33 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-  Avatar,
-} from '@material-tailwind/react';
-import DonationCard from './DonationCard'; // Ensure correct import path
-import Header from '@/components/Header'; // Adjust the path as needed
-import Link from 'next/link';
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    Typography,
+    Button,
+    Avatar,
+} from "@material-tailwind/react";
+import DonationCard from "./DonationCard"; // Ensure correct import path
+import Header from "@/components/Header"; // Adjust the path as needed
+import Link from "next/link";
 
 export interface Donation {
-  foodName: string;
-  foodCategory: string;
-  timeOfPreparation: string;
-  timeOfConsumption: string;
-  ingredient: string;
-  quantity: number;
-  perishable: string;
-  expiryDate: string;
-  donationStatus: string;
-  pickUpLocation: string;
-  specialHandling: string;
-  deliveryMethod: string;
+    foodName: string;
+    foodCategory: string;
+    timeOfPreparation: string;
+    timeOfConsumption: string;
+    ingredient: string;
+    quantity: number;
+    perishable: string;
+    expiryDate: string;
+    donationStatus: string;
+    pickUpLocation: string;
+    specialHandling: string;
+    deliveryMethod: string;
 }
 
 // prettier-ignore
@@ -79,7 +79,7 @@ export default function DonorDashboardClient() {
 
       <div className='flex gap-8'>
         <div className='flex-1 min-w-[30%]'>
-          {/* <Card
+          <Card
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
                     >
@@ -106,7 +106,7 @@ export default function DonorDashboardClient() {
                                 Tania Andrew
                             </Typography>
                         </CardBody>
-                    </Card> */}
+                    </Card>
         </div>
 
         {/* Right Column for Donation Cards */}
