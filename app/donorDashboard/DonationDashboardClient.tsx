@@ -17,15 +17,16 @@ import Link from "next/link";
 
 export interface Donation {
     foodName: string;
+    foodType: string;
     foodCategory: string;
-    timeOfPreparation: string;
-    timeOfConsumption: string;
-    ingredient: string;
+    consumeByTiming: string;
     quantity: number;
-    perishable: string;
     expiryDate: string;
     donationStatus: string;
     pickUpLocation: string;
+    pickUpTime: string;
+    dropOffTime: string;
+    numberOfServings: number;
     specialHandling: string;
     deliveryMethod: string;
 }
@@ -110,7 +111,7 @@ export default function DonorDashboardClient() {
         </div>
 
         {/* Right Column for Donation Cards */}
-        <div className='flex-1 min-w-[70%]'>
+        <div className='flex-1 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto'>
           <h1 className='text-2xl font-bold mb-4 text-black'>My donations</h1>
           {donations.map((donation, index) => (
             <DonationCard
