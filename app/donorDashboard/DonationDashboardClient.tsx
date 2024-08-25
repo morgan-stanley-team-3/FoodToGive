@@ -67,9 +67,8 @@ export default function DonorDashboardClient() {
             <Header />
 
             <div className="flex gap-8">
-                {/* Left Column for Welcome Card */}
                 <div className="flex-1 min-w-[30%]">
-                    <Card
+                    {/* <Card
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
                     >
@@ -95,16 +94,8 @@ export default function DonorDashboardClient() {
                             >
                                 Tania Andrew
                             </Typography>
-                            {/* Uncomment and configure Avatar if needed */}
-                            {/* <Avatar
-                size="xl"
-                variant="circular"
-                alt="tania andrew"
-                className="border-2 border-white"
-                src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-              /> */}
                         </CardBody>
-                    </Card>
+                    </Card> */}
                 </div>
 
                 {/* Right Column for Donation Cards */}
