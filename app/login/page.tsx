@@ -179,7 +179,7 @@ function Cards() {
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3 bg-white'>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='donor'
                 onClick={() => {
                   updateUrlHistory('donor');
@@ -188,7 +188,7 @@ function Cards() {
                 Donor Login
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='beneficiary'
                 onClick={() => {
                   updateUrlHistory('beneficiary');
@@ -197,7 +197,7 @@ function Cards() {
                 Beneficiary Login
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='admin'
                 onClick={() => {
                   updateUrlHistory('admin');
@@ -271,7 +271,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>
@@ -279,7 +282,7 @@ function Cards() {
                 </CardContent>
                 <CardFooter className='flex flex-col items-center mt-4'>
                   <p className='text-sm'>
-                    Do not have an account yet? Click{' '}
+                    Do not have a donor account yet? Click{' '}
                     <Link href='/signup?type=donor' className='underline'>
                       here
                     </Link>{' '}
@@ -354,7 +357,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>
@@ -362,7 +368,7 @@ function Cards() {
                 </CardContent>
                 <CardFooter className='flex flex-col items-center mt-4'>
                   <p className='text-sm'>
-                    Do not have an account yet? Click{' '}
+                    Do not have a beneficiary account yet? Click{' '}
                     <Link href='/signup?type=beneficiary' className='underline'>
                       here
                     </Link>{' '}
@@ -434,7 +440,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>

@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   return (
     <header className='flex justify-between items-center mb-12 bg-white shadow-md p-4'>
       <div className='text-3xl font-bold text-green-600'>
-        FoodToGive - Singapore Food Bank{' '}
+        <a href='/'>FoodToGive - Singapore Food Bank</a>
       </div>
       <nav className='space-x-6 text-lg'>
         <a href='/' className='text-gray-700 hover:text-[#A2C765]'>
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
         )}
         {sessionData.data?.user && (
           <Button
-            className='bg-[#A2C765] text-white hover:bg-[#8BBE3D]'
+            className='bg-[#A2C765] text-white text-md rounded-full hover:bg-[#8BBE3D]'
             onClick={async () => {
               await signOut();
               router.replace('/');

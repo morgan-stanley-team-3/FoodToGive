@@ -222,7 +222,7 @@ function Cards() {
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3 bg-white'>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='donor'
                 onClick={() => {
                   updateUrlHistory('donor');
@@ -231,7 +231,7 @@ function Cards() {
                 Donor Sign Up
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='beneficiary'
                 onClick={() => {
                   updateUrlHistory('beneficiary');
@@ -240,7 +240,7 @@ function Cards() {
                 Beneficiary Sign Up
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='admin'
                 onClick={() => {
                   updateUrlHistory('admin');
@@ -481,7 +481,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>
@@ -640,7 +643,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>
@@ -741,7 +747,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>
