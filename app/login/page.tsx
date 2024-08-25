@@ -93,7 +93,7 @@ function Cards() {
           message: 'You are not registered as a donor!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/donorDashboard');
       }
     }
   }
@@ -123,7 +123,7 @@ function Cards() {
           message: 'You are not registered as a beneficiary!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/beneficiaryDashboard');
       }
     }
   }
@@ -153,7 +153,7 @@ function Cards() {
           message: 'You are not registered as an admin!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/adminDashboard');
       }
     }
   }
