@@ -22,8 +22,32 @@ const Dashboard: React.FC = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    const handleAccept = () => {
+    const handleAccept = async () => {
         console.log("Accepted");
+        try {
+            const response = await fetch(
+                "https://synykc6wha.execute-api.ap-southeast-1.amazonaws.com/default/codeToGiveEmail",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        donorName: "Ashley Tan",
+                        beneficiaryName: "John Doe",
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                alert("Email sent successfully!");
+            } else {
+                const errorMessage = await response.json();
+                alert(`Failed to send email: ${errorMessage.body}`);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleReject = () => {
