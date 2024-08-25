@@ -68,7 +68,7 @@ export default function DonorDashboardClient() {
 
             <div className="flex gap-8">
                 {/* Left Column for Welcome Card */}
-                <div className="flex-1 min-w-[33%]">
+                <div className="flex-1 min-w-[30%]">
                     <Card
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
@@ -108,7 +108,7 @@ export default function DonorDashboardClient() {
                 </div>
 
                 {/* Right Column for Donation Cards */}
-                <div className="flex-1 min-w-[66%]">
+                <div className="flex-1 min-w-[70%]">
                     <h1 className="text-2xl font-bold mb-4 text-black">
                         My donations
                     </h1>
