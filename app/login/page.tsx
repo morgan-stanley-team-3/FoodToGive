@@ -471,7 +471,7 @@ export default function Home() {
   const router = useRouter();
   const session = useSession();
 
-  if (session.data) {
+  if (session.data?.user) {
     console.log(session.data, session.data?.user);
     if (session.data?.user.role === 'donor') router.push('/donorDashboard');
     if (session.data?.user.role === 'beneficiary')

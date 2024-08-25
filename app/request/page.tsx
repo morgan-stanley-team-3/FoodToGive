@@ -95,7 +95,7 @@ const Request = () => {
   });
 
   async function onSubmit(values: any) {
-    // make api call to save donation details in mongodb
+    // make api call to save request details in mongodb
     if (!session.data?.user) {
       // The user is not found in the session storage, should be prevented by the router
       return;
@@ -110,7 +110,7 @@ const Request = () => {
     };
 
     try {
-      // make api call to save donation details in mongodb
+      // make api call to save request details in mongodb
       const response = await fetch('/api/request', {
         method: 'POST',
         headers: {
@@ -120,11 +120,11 @@ const Request = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to submit donation: ${response.statusText}`);
+        throw new Error(`Failed to submit request: ${response.statusText}`);
       }
 
       const result = await response.json();
-      console.log('Donation submitted successfully: ', result);
+      console.log('Request submitted successfully: ', result);
 
       if (foodType === 'Cooked Food') {
         cookedForm.reset({
@@ -145,15 +145,14 @@ const Request = () => {
 
         toast({
           title: 'Success!',
-          description: 'Your donation request has been submitted successfully.',
+          description: 'Your request has been submitted successfully.',
         });
       }
     } catch (error) {
       toast({
         title: 'Error!',
         description:
-          'Your donation request has failed. Please try again later. Error: ' +
-          error,
+          'Your request has failed. Please try again later. Error: ' + error,
       });
     }
   }
@@ -291,18 +290,18 @@ const Request = () => {
                         >
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='selfPickup' />
+                              <RadioGroupItem value='Self-Collection' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              I will pick up the food
+                              Self-Collection
                             </FormLabel>
                           </FormItem>
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='deliverToMe' />
+                              <RadioGroupItem value='Scheduled Delivery' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              Please deliver the food to me
+                              Scheduled Delivery
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -312,7 +311,8 @@ const Request = () => {
                   )}
                 />
 
-                {cookedForm.watch('deliveryMethod') === 'deliverToMe' && (
+                {cookedForm.watch('deliveryMethod') ===
+                  'Scheduled Delivery' && (
                   <>
                     <FormField
                       control={cookedForm.control}
