@@ -588,7 +588,7 @@ const Donate = () => {
                           }}
                         >
                           <SelectTrigger className='w-full shadow-sm'>
-                            <SelectValue placeholder='Select Food Type' />
+                            <SelectValue placeholder='Select Food Category' />
                           </SelectTrigger>
                           <SelectContent className='w-full'>
                             <SelectItem value='Vegetables'>

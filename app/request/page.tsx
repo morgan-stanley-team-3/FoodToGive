@@ -30,7 +30,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
 
 const Request = () => {
-  const { data: session, status } = useSession();
+  const session = useSession();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -96,12 +96,13 @@ const Request = () => {
 
   async function onSubmit(values: any) {
     // make api call to save donation details in mongodb
-    if (!session) {
+    if (!session.data?.user) {
       // The user is not found in the session storage, should be prevented by the router
       return;
     }
 
-    const parsedUser = JSON.parse(session.user);
+    const parsedUser = JSON.parse(session.data?.user);
+    console.log('User: ', parsedUser);
 
     const data = {
       ...values,
@@ -377,7 +378,7 @@ const Request = () => {
                   name='foodCategory'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Food Type</FormLabel>
+                      <FormLabel>Food Category</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value || ''}
@@ -387,7 +388,7 @@ const Request = () => {
                           }}
                         >
                           <SelectTrigger className='w-full shadow-sm'>
-                            <SelectValue placeholder='Select Food Type' />
+                            <SelectValue placeholder='Select Food Category' />
                           </SelectTrigger>
                           <SelectContent className='w-full'>
                             <SelectItem value='Vegetables'>
