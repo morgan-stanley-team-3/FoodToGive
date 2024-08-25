@@ -17,5 +17,6 @@ export default async function DonorDashboardPage() {
   return (
     // Render the client component and pass the data as props
     <DonationDashboardClient donation={donations} />
+    // <DonationDashboardClient donation={donations} />
   );
 }
