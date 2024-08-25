@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         deliveryTime,
         quantity,
         specialRequest,
-        agencyName,
+        user,
       } = body;
 
       // create a new donation object
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         deliveryTime,
         quantity,
         specialRequest,
-        agencyName,
+        user,
       };
 
       // Insert the new donation into the "donations" collection
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         deliveryTime,
         numberOfServings,
         specialRequest,
-        agencyName,
+        user,
       } = body;
 
       // create new donation object
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
         numberOfServings,
         specialRequest,
         createdAt: new Date(),
-        agencyName,
+        user,
       };
 
       // Insert the new donation into the "donations" collection

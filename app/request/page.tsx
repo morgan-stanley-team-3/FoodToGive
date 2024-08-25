@@ -113,15 +113,11 @@ const Request = () => {
       role: session.data?.user.role,
     };
 
-    console.log('USER', user);
-
     const data = {
       ...values,
       foodType: foodType,
       user: user,
     };
-
-    console.log(data);
 
     try {
       // make api call to save request details in mongodb
