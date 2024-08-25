@@ -85,9 +85,10 @@ const Header: React.FC = () => {
         {sessionData.data?.user && (
           <Button
             className='bg-[#A2C765] text-white text-md rounded-full hover:bg-[#8BBE3D]'
-            onClick={async () => {
+            onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault();
               await signOut();
-              router.replace('/');
+              window.location.href = '/';
             }}
           >
             Logout

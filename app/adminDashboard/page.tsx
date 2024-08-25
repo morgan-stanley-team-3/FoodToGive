@@ -7,7 +7,7 @@ import MatchCard from "./MatchCard";
 import foodRequest from "./beneficiariesRequest";
 import donnorOffer from "./donnorOffer";
 import matches from "./matches";
-import Header from "../components/Header"; // Adjust the path as needed
+import Header from "@/components/Header"; // Adjust the path as needed
 
 // Define the data type for food requests
 interface FoodRequest {

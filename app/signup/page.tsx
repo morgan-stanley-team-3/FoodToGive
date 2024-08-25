@@ -8,7 +8,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../components/ui/form';
+} from '@/components/ui/form';
 import {
   Card,
   CardContent,
@@ -16,19 +16,19 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from '../../components/ui/card';
+} from '@/components/ui/card';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
+} from '@/components/ui/select';
 import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
@@ -45,7 +45,7 @@ import {
   QUERY_PARAM_NAME,
 } from '@/lib/login/constants';
 import { Checkbox } from '@/components/ui/checkbox';
-import Header from '../../components/Header';
+import Header from '@/components/Header';
 import { registerUser } from '@/actions/signup';
 
 const donorSignupScheme = z.object({

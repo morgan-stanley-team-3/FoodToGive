@@ -1,83 +1,85 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Button,
-    Avatar,
-} from "@material-tailwind/react";
-import DonationCard from "./DonationCard"; // Ensure correct import path
-import Header from "../components/Header"; // Adjust the path as needed
-import Link from "next/link";
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Avatar,
+} from '@material-tailwind/react';
+import DonationCard from './DonationCard'; // Ensure correct import path
+import Header from '@/components/Header'; // Adjust the path as needed
+import Link from 'next/link';
 
 export interface Donation {
-    foodName: string;
-    foodCategory: string;
-    timeOfPreparation: string;
-    timeOfConsumption: string;
-    ingredient: string;
-    quantity: number;
-    perishable: string;
-    expiryDate: string;
-    donationStatus: string;
-    pickUpLocation: string;
-    specialHandling: string;
-    deliveryMethod: string;
+  foodName: string;
+  foodCategory: string;
+  timeOfPreparation: string;
+  timeOfConsumption: string;
+  ingredient: string;
+  quantity: number;
+  perishable: string;
+  expiryDate: string;
+  donationStatus: string;
+  pickUpLocation: string;
+  specialHandling: string;
+  deliveryMethod: string;
 }
 
 // prettier-ignore
 export default function DonorDashboardClient() {
-    const [donations, setDonations] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [donations, setDonations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchDonations() {
-            try {
-                const response = await axios.get("/api/donations"); // Adjust the API endpoint as needed
-                setDonations(response.data);
-                console.log(response.data);
-                console.log(donations);
-            } catch (error) {
-                console.error("Error fetching donations:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchDonations();
-    }, []);
-
-    useEffect(() => {
-        console.log("Updated donations:", donations);
-    }, [donations]);
-
-    if (loading) {
-        return <div>Loading...</div>;
+  useEffect(() => {
+    async function fetchDonations() {
+      try {
+        const response = await axios.get('/api/donations'); // Adjust the API endpoint as needed
+        setDonations(response.data);
+        console.log(response.data);
+        console.log(donations);
+      } catch (error) {
+        console.error('Error fetching donations:', error);
+      } finally {
+        setLoading(false);
+      }
     }
+    fetchDonations();
+  }, []);
 
-    if (!donations.length) {
-        return <div>No donations found.</div>;
-    }
+  useEffect(() => {
+    console.log('Updated donations:', donations);
+  }, [donations]);
 
-    return (
-        <div className="bg-gray-50 min-h-screen p-8">
-            <Header />
-            <div className="flex flex-row items-center justify-between">
-                <div className="mr-3 mb-3 text-3xl font-extrabold w-[90%]">Donor Dashboard</div>
-                <Link href="/donate" className="w-[10%]">
-                    <button className="bg-green-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
-                        New donation
-                    </button>
-                </Link>            
-            </div>
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-            <div className="flex gap-8">
-                <div className="flex-1 min-w-[30%]">
-                    {/* <Card
+  if (!donations.length) {
+    return <div>No donations found.</div>;
+  }
+
+  return (
+    <div className='bg-gray-50 min-h-screen p-8'>
+      <Header />
+      <div className='flex flex-row items-center justify-between'>
+        <div className='mr-3 mb-3 text-3xl font-extrabold w-[90%]'>
+          Donor Dashboard
+        </div>
+        <Link href='/donate' className='w-[10%]'>
+          <button className='bg-green-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75'>
+            New donation
+          </button>
+        </Link>
+      </div>
+
+      <div className='flex gap-8'>
+        <div className='flex-1 min-w-[30%]'>
+          {/* <Card
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
                     >
@@ -105,21 +107,19 @@ export default function DonorDashboardClient() {
                             </Typography>
                         </CardBody>
                     </Card> */}
-                </div>
-
-                {/* Right Column for Donation Cards */}
-                <div className="flex-1 min-w-[70%]">
-                    <h1 className="text-2xl font-bold mb-4 text-black">
-                        My donations
-                    </h1>
-                    {donations.map((donation, index) => (
-                        <DonationCard
-                            key={index} // Add a unique key prop here
-                            donation={donation}
-                        />
-                    ))}
-                </div>
-            </div>
         </div>
-    );
+
+        {/* Right Column for Donation Cards */}
+        <div className='flex-1 min-w-[70%]'>
+          <h1 className='text-2xl font-bold mb-4 text-black'>My donations</h1>
+          {donations.map((donation, index) => (
+            <DonationCard
+              key={index} // Add a unique key prop here
+              donation={donation}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
