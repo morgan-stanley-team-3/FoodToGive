@@ -25,7 +25,7 @@ import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 
 {
   /* Custom imports */
@@ -85,7 +85,9 @@ function Cards() {
     }
 
     if (signin?.ok) {
-      if (session.data?.user.role !== 'donor') {
+      const session = await getSession();
+
+      if (session?.user.role !== 'donor') {
         signOut({ redirect: false });
         donorLoginForm.setError('root', {
           type: 'manual',
@@ -113,17 +115,16 @@ function Cards() {
     }
 
     if (signin?.ok) {
-      console.log('USER: ', session.data?.user);
+      const session = await getSession();
 
-      if (session.data?.user.role !== 'beneficiary') {
+      if (session?.user.role !== 'beneficiary') {
         signOut({ redirect: false });
         beneficiaryLoginForm.setError('root', {
           type: 'manual',
           message: 'You are not registered as a beneficiary!',
         });
       } else {
-        console.log('REDIRECTING TO BENEFICIARY');
-        // router.push('/beneficiaryDashboard');
+        router.push('/beneficiaryDashboard');
       }
     }
   }
@@ -144,7 +145,9 @@ function Cards() {
     }
 
     if (signin?.ok) {
-      if (session.data?.user.role !== 'admin') {
+      const session = await getSession();
+
+      if (session?.user.role !== 'admin') {
         signOut({ redirect: false });
         adminLoginForm.setError('root', {
           type: 'manual',
