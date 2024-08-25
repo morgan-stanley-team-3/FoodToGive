@@ -521,14 +521,14 @@ function Cards() {
                       )}
                       className='flex flex-col gap-4'
                     >
-                      <p className='mt-4 font-bold'>Donor Information</p>
+                      <p className='mt-4 font-bold'>Contact Information</p>
                       <FormField
                         control={beneficiarySignupForm.control}
                         name='agency'
                         render={({ field }) => {
                           return (
                             <FormItem>
-                              <FormLabel>Donor Agency Name</FormLabel>
+                              <FormLabel>Agency Name</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
