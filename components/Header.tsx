@@ -12,22 +12,20 @@ const Header: React.FC = () => {
   const router = useRouter();
 
   return (
-    <header className='flex justify-between items-center mb-12 bg-white shadow-md p-4'>
+    <header className='flex justify-between items-center mb-12 bg-white shadow-md p-4 flex-wrap'>
       <a href='/'>
-        <div className='flex flex-row items-center'>
-          <span>
-            <Image
-              src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_PW2BsuN_3oL96einYF1zuZdMrTO7MTbXLw&s'
-              alt='Our Mission'
-              width={52}
-              height={52}
-              className='mr-2'
-            />
-          </span>
+        <div className='flex items-center'>
+          <Image
+            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_PW2BsuN_3oL96einYF1zuZdMrTO7MTbXLw&s'
+            alt='Our Mission'
+            width={52}
+            height={52}
+            className='mr-2'
+          />
           <span className='text-3xl font-bold text-[#A2C765]'>FoodToGive</span>
         </div>
       </a>
-      <nav className='space-x-6 text-lg'>
+      <nav className='flex items-center space-x-6 text-lg'>
         {!sessionData.data?.user && (
           <a href='/' className='text-gray-700 hover:text-[#A2C765]'>
             Home
@@ -45,13 +43,13 @@ const Header: React.FC = () => {
 
         <a
           href='/chatbot'
-          className='block px-4 py-2 hover:bg-gray-100 hover:text-[#A2C765]'
+          className='text-gray-700 hover:text-[#A2C765]'
         >
           Chatbot
         </a>
 
         <div
-          className='relative inline-block text-gray-700'
+          className='relative text-gray-700'
           onMouseEnter={() => setDropdownOpen(true)}
           onMouseLeave={() => setDropdownOpen(false)}
         >
