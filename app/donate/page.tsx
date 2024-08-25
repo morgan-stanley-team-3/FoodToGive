@@ -1,11 +1,18 @@
 "use client"; 
 
-import React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import Image from 'next/image';
 import {
   Form,
@@ -24,9 +31,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import PostLoginNavbar from '../components/PostLoginNavbar';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import Header from '@/components/Header';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 
 const Donate = () => {
+
+  const {data: session, status} = useSession();
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -53,8 +69,8 @@ const Donate = () => {
     foodName: z.string().min(2, {
       message: "Food name must be at least 2 characters.",
     }),
-    expiryDate: z.string().nonempty({
-      message: "Expiry Date is required.",
+    bestBeforeDate: z.string().nonempty({
+      message: "Best Before Date is required.",
     }),
     foodCategory: z.string().nonempty({
       message: "Food Category is required.",
@@ -78,7 +94,11 @@ const Donate = () => {
       consumeByTiming: "",
       specialHandling: "",
       numberOfServings: 0,
-      foodImages: []
+      foodImages: [],
+      deliveryMethod: "", 
+      pickUpTime: "", 
+      pickUpLocation: "", 
+      dropOffTime: ""
     },
   });
 
@@ -86,63 +106,138 @@ const Donate = () => {
     resolver: zodResolver(nonCookedFormSchema),
     defaultValues: {
       foodName: "",
-      expiryDate: "",
+      bestBeforeDate: "",
       foodCategory: "",
       specialHandling: "",
       quantity: 0,
-      foodImages: []
+      foodImages: [],
+      pickUpTime: "", 
+      pickUpLocation: "", 
+      dropOffTime: ""
+
     },
   });
 
-  function onSubmit(values: any) {
+  // Helper function to convert file to Base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    console.log("convertToBase64 called with file:", file.name);
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result?.toString().split(',')[1];
+        console.log("Base64 String:", base64String);
+        resolve(base64String || '');
+      };
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
-    // make api call to save donation details in mongodb 
-    if (foodType === "Cooked Food") { 
-      cookedForm.reset({
-        foodName: "",
-        timePrepared: "",
-        specialHandling: "", 
-        numberOfServings: 0, 
-        deliveryMethod: ""
+  async function onSubmit(values: any) {
+    console.log(values);
+
+    // Convert image files to Base64
+    const base64Images = await Promise.all(
+      values.foodImages.map(async (file: File) => {
+        const base64String = await convertToBase64(file);
+        console.log(base64String);
+        return base64String;
       })
-    } else { 
-      nonCookedForm.reset({
-        foodName: "",
-        expiryDate: "",
-        foodCategory: "",
-        specialHandling: "",
-        quantity: 0,
-        deliveryMethod: ""
-      });
-      setSelectedCategory(""); 
+    );
+    values.foodImages = base64Images;
+    
+    // make api call to save donation details in mongodb 
+    
+    if (!session) { 
+      console.error('User not found in session storage');
+      return; 
+    }
+    const parsedUser = JSON.parse(session.user);
+
+
+    const data = { 
+      ...values,
+      donor: parsedUser, 
+      foodType: foodType
+    }
+
+    try { 
+      // make api call to save donation details in mongodb 
+      const response = await fetch('/api/donation', { 
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      if (!response.ok) { 
+        throw new Error(`Failed to submit donation: ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      console.log('Donation submitted successfully: ', result);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      if (foodType === "Cooked Food") { 
+        cookedForm.reset({
+          foodName: "",
+          timePrepared: "",
+          specialHandling: "", 
+          numberOfServings: 0, 
+          deliveryMethod: "",
+          foodImages: []
+        })
+        setPreviewImages([])
+      } else { 
+        nonCookedForm.reset({
+          foodName: "",
+          bestBeforeDate: "",
+          foodCategory: "",
+          specialHandling: "",
+          quantity: 0,
+          deliveryMethod: "",
+          foodImages: []
+        });
+        setSelectedCategory(""); 
+        setPreviewImages([]);
+      }
+    } catch (error) { 
+      console.error('Error submitting donation: ', error);
     }
 
   }
+
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [foodType, setFoodType] = useState("Non-Cooked Food");
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files) {
+    console.log(files)
+    if (files) { 
       const previews = files.map((file) => URL.createObjectURL(file));
       setPreviewImages(previews);
-      // cookedForm.setValue("foodImages", files); // Store files in the form state
+      if (foodType === "Non-Cooked Food") { 
+        nonCookedForm.setValue("foodImages", files);
+      } else{ 
+        cookedForm.setValue("foodImages", files); // Store files in the form state
+      }
+      
     }
   };
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
       {/* Navigation Bar */}
-      <header className="flex justify-between items-center mb-8">
-        <div className="text-2xl font-bold">FoodToGive</div>
-        <nav className="space-x-4">
-          <a href="/" className="text-gray-700 hover:text-gray-900">Home</a>
-          <a href="/about" className="text-gray-700 hover:text-gray-900">About Us</a>
-          <a href="/donate" className="text-gray-700 hover:text-gray-900">Donate</a>
-          <a href="/account" className="text-gray-700 hover:text-gray-900">Account</a>
-        </nav>
-      </header>
+      <PostLoginNavbar/>
 
 
       {/* Form Content */}
@@ -261,6 +356,7 @@ const Donate = () => {
                       <Input
                         type="file"
                         multiple
+                        ref={fileInputRef} 
                         accept="image/*"
                         className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
                         onChange={handleFileChange}
@@ -268,15 +364,32 @@ const Donate = () => {
                     </FormControl>
                     <FormMessage />
                     {previewImages.length > 0 && (
-                      <div className="mt-4 grid grid-cols-2 gap-4">
-                        {previewImages.map((src, index) => (
-                          <Image
-                            key={index}
-                            src={src}
-                            alt={`Food preview ${index + 1}`}
-                            className="w-full h-auto rounded-md"
-                          />
-                        ))}
+                      <div className="flex justify-center my-4">
+                        <Carousel
+                          opts={{
+                            align: 'start',
+                          }}
+                          className="w-full max-w-sm"
+                        >
+                          <CarouselContent>
+                            {previewImages.map((src, index) => (
+                              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1">
+                              
+                                      <Image
+                                        src={src}
+                                        width={244} 
+                                        height={244}
+                                        alt={`Food preview ${index + 1}`}
+                                        className="w-full h-auto rounded-md"
+                                      />
+                                </div>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <CarouselPrevious type="button"/>
+                          <CarouselNext type="button"/>
+                        </Carousel>
                       </div>
                     )}
                   </FormItem>
@@ -312,13 +425,13 @@ const Donate = () => {
                             <FormControl>
                               <RadioGroupItem value="pickup" />
                             </FormControl>
-                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                            <FormLabel className="font-normal">Scheduled Pickup</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
                               <RadioGroupItem value="selfDeliver" />
                             </FormControl>
-                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                            <FormLabel className="font-normal">Self-Delivery</FormLabel>
                           </FormItem>
                         </RadioGroup>
                       </FormControl>
@@ -371,7 +484,7 @@ const Donate = () => {
                             <Input className="shadow-sm" type="datetime-local" {...field} />
                           </FormControl>
                           <FormMessage />
-                          <FormDescription>Our address is 218 Pandan Loop, Level 6, Singapore 128408. We are open from 9.30am - 6pm from Mondays to Fridays and 10am - 5pm on Saturdays. </FormDescription>
+                          <FormDescription className="text-gray-500">Our address is 218 Pandan Loop, Level 6, Singapore 128408. We are open from 9.30am - 6pm from Mondays to Fridays and 10am - 5pm on Saturdays. </FormDescription>
 
                         </FormItem>
                       )}
@@ -379,7 +492,7 @@ const Donate = () => {
                   </>
                 )}
 
-              <div className="flex justify-end"><Button type="submit">Submit</Button></div>
+              <div className="flex justify-end "><Button type="submit">Submit</Button></div>
             </form>
           </Form>
         ) : (
@@ -404,7 +517,7 @@ const Donate = () => {
                 name="foodCategory"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Food Type</FormLabel>
+                    <FormLabel>Food Category</FormLabel>
                     <FormControl>
                       <Select
                         value={field.value || ""}
@@ -445,7 +558,7 @@ const Donate = () => {
 
               <FormField
                 control={nonCookedForm.control}
-                name="expiryDate"
+                name="bestBeforeDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Best Before Date</FormLabel>
@@ -467,6 +580,7 @@ const Donate = () => {
                       <Input
                         type="file"
                         multiple
+                        ref={fileInputRef} 
                         accept="image/*"
                         className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
                         onChange={handleFileChange}
@@ -474,20 +588,38 @@ const Donate = () => {
                     </FormControl>
                     <FormMessage />
                     {previewImages.length > 0 && (
-                      <div className="mt-4 grid grid-cols-2 gap-4">
-                        {previewImages.map((src, index) => (
-                          <Image
-                            key={index}
-                            src={src}
-                            alt={`Food preview ${index + 1}`}
-                            className="w-full h-auto rounded-md"
-                          />
-                        ))}
+                      <div className="flex justify-center my-4">
+                        <Carousel
+                          opts={{
+                            align: 'start',
+                          }}
+                          className="w-full max-w-sm"
+                        >
+                          <CarouselContent>
+                            {previewImages.map((src, index) => (
+                              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1">
+                              
+                                      <Image
+                                        src={src}
+                                        width={244} 
+                                        height={244}
+                                        alt={`Food preview ${index + 1}`}
+                                        className="w-full h-auto rounded-md"
+                                      />
+                                </div>
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <CarouselPrevious type="button"/>
+                          <CarouselNext type="button" />
+                        </Carousel>
                       </div>
                     )}
                   </FormItem>
                 )}
               />
+
 
               <FormField
                 control={nonCookedForm.control}
@@ -518,13 +650,13 @@ const Donate = () => {
                             <FormControl>
                               <RadioGroupItem value="pickup" />
                             </FormControl>
-                            <FormLabel className="font-normal">Pickup by us</FormLabel>
+                            <FormLabel className="font-normal">Scheduled Pickup</FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3">
                             <FormControl>
                               <RadioGroupItem value="selfDeliver" />
                             </FormControl>
-                            <FormLabel className="font-normal">I will deliver</FormLabel>
+                            <FormLabel className="font-normal">Self-Delivery</FormLabel>
                           </FormItem>
                         </RadioGroup>
                       </FormControl>

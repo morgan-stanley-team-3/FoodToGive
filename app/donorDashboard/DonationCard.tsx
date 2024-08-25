@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Card,
     CardBody,
@@ -29,7 +28,11 @@ const DonationCard: React.FC<DonationCardProps> = ({ donation }) => {
             <CardBody>
                 <Typography variant="h5" color="blue-gray" className="mb-2">
                     <FaBowlFood className="inline-block mr-2" />
-                    {donation.foodName}
+                    {donation.foodName} [{donation.foodCategory}]
+                </Typography>
+                <Typography className="mb-2">
+                    <FaQuestionCircle className="inline-block mr-2" />
+                    Quantity: {donation.quantity}
                 </Typography>
                 <Typography className="mb-2">
                     <FaClock className="inline-block mr-2" />
@@ -41,7 +44,7 @@ const DonationCard: React.FC<DonationCardProps> = ({ donation }) => {
                 </Typography>
                 <Typography className="mb-2">
                     <FaUtensils className="inline-block mr-2" />
-                    Ingredient: {donation.ingredient}
+                    Ingredients: {donation.ingredient}
                 </Typography>
                 <Typography className="mb-2">
                     <FaQuestionCircle className="inline-block mr-2" />
