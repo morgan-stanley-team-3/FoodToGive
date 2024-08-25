@@ -11,6 +11,10 @@ if (!uri) {
     throw new Error("Please add your MongoDB URI to .env.local");
 }
 
+declare global {
+    var _mongoClientPromise: Promise<MongoClient>;
+}
+
 let client: MongoClient | null = null;
 let clientPromise: Promise<MongoClient>;
 
@@ -49,18 +53,4 @@ export async function GET() {
     }
 }
 
-// export async function POST(req: Request) {
-//     try {
-//         const collection = await getCollection();
-//         const donation = await req.json();
-//         const result = await collection.insertOne(donation);
-
-//         return NextResponse.json(result, { status: 201 });
-//     } catch (error) {
-//         console.error("MongoDB connection error:", error);
-//         return NextResponse.json(
-//             { message: "Internal server error" },
-//             { status: 404 }
-//         );
-//     }
-// }
+export default clientPromise;
