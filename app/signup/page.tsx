@@ -8,7 +8,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../components/ui/form';
+} from '@/components/ui/form';
 import {
   Card,
   CardContent,
@@ -16,23 +16,24 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from '../../components/ui/card';
+} from '@/components/ui/card';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
+} from '@/components/ui/select';
 import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
+import { useToast } from '@/components/ui/use-toast';
 import { getSession, useSession } from 'next-auth/react';
 
 {
@@ -44,7 +45,7 @@ import {
   QUERY_PARAM_NAME,
 } from '@/lib/login/constants';
 import { Checkbox } from '@/components/ui/checkbox';
-import Header from '../../components/Header';
+import Header from '@/components/Header';
 import { registerUser } from '@/actions/signup';
 
 const donorSignupScheme = z.object({
@@ -217,12 +218,12 @@ function Cards() {
   return (
     <section className='h-full w-full flex flex-col items-center'>
       <div className='container mx-auto'>
-        <div className='flex flex-col items-center p-4 mb-4'>
+        <div className='flex flex-col items-center mb-4'>
           <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3 bg-white'>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='donor'
                 onClick={() => {
                   updateUrlHistory('donor');
@@ -231,7 +232,7 @@ function Cards() {
                 Donor Sign Up
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='beneficiary'
                 onClick={() => {
                   updateUrlHistory('beneficiary');
@@ -240,7 +241,7 @@ function Cards() {
                 Beneficiary Sign Up
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='admin'
                 onClick={() => {
                   updateUrlHistory('admin');
@@ -481,7 +482,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>
@@ -517,14 +521,14 @@ function Cards() {
                       )}
                       className='flex flex-col gap-4'
                     >
-                      <p className='mt-4 font-bold'>Donor Information</p>
+                      <p className='mt-4 font-bold'>Contact Information</p>
                       <FormField
                         control={beneficiarySignupForm.control}
                         name='agency'
                         render={({ field }) => {
                           return (
                             <FormItem>
-                              <FormLabel>Donor Agency Name</FormLabel>
+                              <FormLabel>Agency Name</FormLabel>
                               <FormControl>
                                 <Input
                                   {...field}
@@ -640,7 +644,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>
@@ -741,7 +748,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Sign Up
                       </Button>
                     </form>

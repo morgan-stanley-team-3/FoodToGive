@@ -7,7 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../components/ui/form';
+} from '@/components/ui/form';
 import {
   Card,
   CardContent,
@@ -15,12 +15,12 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from '../../components/ui/card';
+} from '@/components/ui/card';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
@@ -31,7 +31,7 @@ import { getSession, signIn, signOut, useSession } from 'next-auth/react';
   /* Custom imports */
 }
 import { LOGIN_TYPES, QUERY_PARAM_NAME } from '@/lib/login/constants';
-import Header from '../../components/Header';
+import Header from '@/components/Header';
 
 const loginScheme = z.object({
   email: z.string().email('Email is required'),
@@ -42,6 +42,7 @@ function Cards() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const form = searchParams.get(QUERY_PARAM_NAME) ?? '';
+  const session = useSession();
   const formToRender = LOGIN_TYPES.includes(form) ? form : LOGIN_TYPES[0];
 
   const donorLoginForm = useForm<z.infer<typeof loginScheme>>({
@@ -93,7 +94,7 @@ function Cards() {
           message: 'You are not registered as a donor!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/donorDashboard');
       }
     }
   }
@@ -123,7 +124,7 @@ function Cards() {
           message: 'You are not registered as a beneficiary!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/beneficiaryDashboard');
       }
     }
   }
@@ -153,7 +154,7 @@ function Cards() {
           message: 'You are not registered as an admin!',
         });
       } else {
-        router.push('/dashboard');
+        router.push('/adminDashboard');
       }
     }
   }
@@ -174,12 +175,12 @@ function Cards() {
   return (
     <section className='h-full w-full flex flex-col items-center'>
       <div className='container mx-auto'>
-        <div className='flex flex-col items-center p-4 mb-4'>
+        <div className='flex flex-col items-center mb-4'>
           <Tabs defaultValue={formToRender} className='w-[75%] min-w-[512px]'>
             {/* Define the list of tabs */}
             <TabsList className='grid w-full grid-cols-3 bg-white'>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='donor'
                 onClick={() => {
                   updateUrlHistory('donor');
@@ -188,7 +189,7 @@ function Cards() {
                 Donor Login
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='beneficiary'
                 onClick={() => {
                   updateUrlHistory('beneficiary');
@@ -197,7 +198,7 @@ function Cards() {
                 Beneficiary Login
               </TabsTrigger>
               <TabsTrigger
-                className='data-[state=active]:text-white data-[state=active]:bg-green-600'
+                className='data-[state=active]:text-white data-[state=active]:bg-[#A2C765]'
                 value='admin'
                 onClick={() => {
                   updateUrlHistory('admin');
@@ -271,7 +272,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>
@@ -279,7 +283,7 @@ function Cards() {
                 </CardContent>
                 <CardFooter className='flex flex-col items-center mt-4'>
                   <p className='text-sm'>
-                    Do not have an account yet? Click{' '}
+                    Do not have a donor account yet? Click{' '}
                     <Link href='/signup?type=donor' className='underline'>
                       here
                     </Link>{' '}
@@ -354,7 +358,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>
@@ -362,7 +369,7 @@ function Cards() {
                 </CardContent>
                 <CardFooter className='flex flex-col items-center mt-4'>
                   <p className='text-sm'>
-                    Do not have an account yet? Click{' '}
+                    Do not have a beneficiary account yet? Click{' '}
                     <Link href='/signup?type=beneficiary' className='underline'>
                       here
                     </Link>{' '}
@@ -434,7 +441,10 @@ function Cards() {
                         </p>
                       )}
 
-                      <Button className='w-full mt-4' type='submit'>
+                      <Button
+                        className='w-full mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                        type='submit'
+                      >
                         Login
                       </Button>
                     </form>
@@ -459,12 +469,6 @@ function Cards() {
 }
 
 export default function Home() {
-  const router = useRouter();
-
-  if (useSession().data) {
-    router.push('/dashboard');
-  }
-
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       <Header />

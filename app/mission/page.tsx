@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Header from '../../components/Header'; // Adjust the path as needed
+import Header from '@/components/Header'; // Adjust the path as needed
 
 const MissionPage: React.FC = () => {
   return (

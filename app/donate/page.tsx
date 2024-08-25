@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -31,11 +31,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import PostLoginNavbar from "../components/PostLoginNavbar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Header from "@/components/Header";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useToast } from '@/components/ui/use-toast';
 
 const Donate = () => {
     const { data: session, status } = useSession();
@@ -232,7 +232,7 @@ const Donate = () => {
     return (
         <div className="bg-gray-100 min-h-screen p-8">
             {/* Navigation Bar */}
-            <PostLoginNavbar />
+            <Header />
 
             {/* Form Content */}
             <section className="bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center">
