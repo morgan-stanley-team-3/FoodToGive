@@ -482,18 +482,18 @@ const Request = () => {
                         >
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='selfPickup' />
+                              <RadioGroupItem value='Self-Collection' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              I will pick up the food
+                              Self-Collection
                             </FormLabel>
                           </FormItem>
                           <FormItem className='flex items-center space-x-3'>
                             <FormControl>
-                              <RadioGroupItem value='deliverToMe' />
+                              <RadioGroupItem value='Scheduled Delivery' />
                             </FormControl>
                             <FormLabel className='font-normal'>
-                              Please deliver the food to me
+                              Scheduled Delivery
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -503,7 +503,8 @@ const Request = () => {
                   )}
                 />
 
-                {nonCookedForm.watch('deliveryMethod') === 'deliverToMe' && (
+                {nonCookedForm.watch('deliveryMethod') ===
+                  'Scheduled Delivery' && (
                   <>
                     <FormField
                       control={nonCookedForm.control}
