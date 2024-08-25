@@ -10,39 +10,63 @@ const requestsCollection = "requests";
 const agencyScoreCollection = "agency";
 const entityCollection = "entities";
 
-// Interface definitions
+// Updated Donation Interface
 interface Donation {
-    entityName: string;
-    foodType: string;
-    foodName: string;
-    foodCategory: string;
-    bestBeforeDate: string;
-    specialStorageRequirements: string;
-    deliveryMethod: string; // "self-drop" or "pickup"
-    dropOffTime: string;
-    pickUpLocation: string;
-    pickUpTime: string;
-    datePrepared: string;
-    quantity: number; // or could do weight but servings make more sense
-    consumeByTime: string;
+    _id: string;
+    deliveryMethod: string; // "Self-Delivery" or "pickup"
+    dropOffTime: string | null;
+    expiryDate: string | null;
+    foodCategory: string; // e.g., "Canned Food"
+    foodImages: string[]; // Array of image URLs, can be empty
+    foodName: string; // e.g., "Meat"
+    foodType: string; // e.g., "Cooked Food"
+    pickUpLocation: string | null;
+    pickUpTime: string | null;
+    quantity: number; // e.g., 1 (units or kg)
+    specialHandling: string; // e.g., special instructions for handling
+    createdAt: string;
+    user: {
+        email: string;
+        agency: string; // e.g., "Donor"
+        address: string; // e.g., "Central"
+        poc_name: string; // Point of contact name, e.g., "Bread Talk (HQ)"
+        poc_phone: string; // Point of contact phone, e.g., "98928348"
+        halal_certification: boolean;
+        hygiene_certification: boolean;
+        role: string; // e.g., "Donor"
+    };
 }
 
+// Updated Request Interface
 interface Request {
-    entityName: string;
-    foodType: string;
-    foodName: string;
-    needByTime: string;
-    foodCategory: string;
-    specialRequest: string;
-    deliveryMethod: string; // "self-drop" or "pickup"
-    deliveryTime: string;
-    deliveryLocation: string;
-    quantity: number; // In kg or units
+    _id: string;
+    foodType: string; // e.g., "Non-Cooked Food"
+    deliveryMethod: string; // e.g., "Scheduled Delivery"
+    needByTime: string; // e.g., "1999-01-10T22:10"
+    foodCategory: string; // e.g., "Fruits"
+    foodName: string; // e.g., "Strawberry"
+    deliveryLocation: string; // e.g., "somewhere in Singapore"
+    deliveryTime: string; // e.g., "1222-12-12T10:10"
+    quantity: number; // e.g., 100 (units or kg)
+    specialRequest: string; // e.g., "sliced"
+    user: {
+        email: string;
+        agency: string; // e.g., "Donor"
+        uen: string; // e.g., "12345678X"
+        address: string; // e.g., "123 Street"
+        poc_name: string; // Point of contact name, e.g., "Society of Sheng Hong Welfare Services @ Hougang"
+        poc_phone: string; // Point of contact phone, e.g., "91234567"
+        halal_certification: boolean;
+        hygiene_certification: string; // e.g., "C"
+        role: string; // e.g., "Donor"
+    };
 }
 
+// Updated EntityLocation Interface
 interface EntityLocation {
-    entityName: string;
-    Geo_location: [number, number]; // [x, y] coordinates
+    entityName: string; // e.g., "Society of Sheng Hong Welfare Services @ Hougang"
+    entityAddress: string; // e.g., "Blk 237 Hougang St 21 #01-406 Singapore 530237"
+    Geo_location: [number, number]; // [longitude, latitude] coordinates, e.g., [103.888708, 1.356995]
 }
 
 interface AgencyScore {
@@ -71,17 +95,20 @@ const checkMatchValidity = (donation: Donation, request: Request): boolean => {
         new Date(donation.pickUpTime) > new Date(request.deliveryTime)) {
         return false;
     }
+    if (request.user.halal_certification && !donation.user.halal_certification) {
+        return false;
+    }
+    
 
     return true;
 };
 
-
 // Basic Cartesian distance calculation (Euclidean distance)
 const calculateDistance = (coord1: [number, number], coord2: [number, number]): number => {
-    const [x1, y1] = coord1;
-    const [x2, y2] = coord2;
+    const [lon1, lat1] = coord1;
+    const [lon2, lat2] = coord2;
 
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    return Math.sqrt(Math.pow(lon2 - lon1, 2) + Math.pow(lat2 - lat1, 2));
 };
 
 // Calculate match score based on quantity and distance
@@ -90,9 +117,9 @@ const calculateMatchScore = async (donation: Donation, request: Request, db: any
 
     const entities = db.collection<EntityLocation>(entityCollection);
 
-    // Retrieve coordinates for donation and request entities
-    const donationEntity = await entities.findOne({ entityName: donation.entityName });
-    const requestEntity = await entities.findOne({ entityName: request.entityName });
+    // Retrieve coordinates for donation (based on user.poc_name) and request entities
+    const donationEntity = await entities.findOne({ entityName: donation.user.poc_name });
+    const requestEntity = await entities.findOne({ entityName: request.user.poc_name });
 
     if (donationEntity && requestEntity) {
         const distance = calculateDistance(donationEntity.Geo_location, requestEntity.Geo_location);
@@ -118,8 +145,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await client.connect();
         const db = client.db(dbName);
 
-        const donations = await db.collection(donationsCollection).find({}).toArray();
-        const requests = await db.collection(requestsCollection).find({}).toArray();
+        const donations = await db.collection<Donation>(donationsCollection).find({}).toArray();
+        const requests = await db.collection<Request>(requestsCollection).find({}).toArray();
         const agencyScores = await db.collection<AgencyScore>(agencyScoreCollection).find({}).toArray();
 
         // Create the matches pair and check match validity before calculating score
@@ -137,19 +164,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const resolvedMatches = await Promise.all(potentialMatches);
 
                 resolvedMatches.forEach(async (match) => {
-                    // Update the agency's score for every valid match
-                    const agencyScore = agencyScores.find(
-                        (score) => score.entityName === match.request.entityName
+                    // Check if the agency already exists in the score collection
+                    let agencyScore = await db.collection<AgencyScore>(agencyScoreCollection).findOne(
+                        { entityName: match.request.user.poc_name }
                     );
+
                     if (agencyScore) {
+                        // Update the existing score
                         agencyScore.score += match.score;
                         await db.collection<AgencyScore>(agencyScoreCollection).updateOne(
-                            { entityName: match.request.entityName },
+                            { entityName: match.request.user.poc_name },
                             { $set: { score: agencyScore.score } }
                         );
                     } else {
+                        // Create a new entry for the agency score
                         await db.collection<AgencyScore>(agencyScoreCollection).insertOne({
-                            entityName: match.request.entityName,
+                            entityName: match.request.user.poc_name,
                             score: match.score,
                         });
                     }
@@ -177,4 +207,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (client) await client.close();
     }
 }
-
