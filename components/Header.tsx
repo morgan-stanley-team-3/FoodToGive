@@ -35,7 +35,10 @@ const Header: React.FC = () => {
         )}
 
         {sessionData.data?.user && (
-          <a href={`${sessionData.data?.user.role}Dashboard`} className='text-gray-700 hover:text-[#A2C765]'>
+          <a
+            href={`/${sessionData.data?.user.role}Dashboard`}
+            className='text-gray-700 hover:text-[#A2C765]'
+          >
             Dashboard
           </a>
         )}
