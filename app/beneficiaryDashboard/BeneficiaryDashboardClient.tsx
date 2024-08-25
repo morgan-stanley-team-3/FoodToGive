@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import BeneficiaryCard from "./BeneficiaryCard"; // Ensure correct import path
 import Header from "../components/Header"; // Adjust the path as needed
-
+import Link from "next/link";
 export interface Request {
     foodName: string;
     foodType: string;
@@ -60,7 +60,14 @@ export default function BeneficiaryDashboardClient() {
     return (
         <div className="bg-gray-50 min-h-screen p-8">
             <Header />
-            <div className="mr-3 mb-3 text-3xl font-extrabold">Beneficiary Dashboard</div>
+            <div className="flex flex-row items-center justify-between">
+                <div className="mr-3 mb-3 text-3xl font-extrabold w-[90%]">Beneficiary Dashboard</div>
+                <Link href="/request" className="w-[10%]">
+                    <button className="bg-green-500 text-white font-semibold py-1 px-3 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
+                        New request
+                    </button>
+                </Link>            
+            </div>
             <div className="flex gap-8">
                 {/* Left Column for Welcome Card */}
                 <div className="flex-1 min-w-[30%]">
