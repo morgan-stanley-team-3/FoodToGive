@@ -1,6 +1,10 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { NextResponse } from "next/server";
 
+declare global {
+    var _mongoClientPromise: Promise<MongoClient>;
+}
+
 // Create a single instance of the MongoClient to be reused across requests
 const uri = process.env.MONGODB_URI as string;
 if (!uri) {
