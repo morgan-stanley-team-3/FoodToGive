@@ -59,6 +59,18 @@
   }
 }
 
+@layer utilities {
+  .border-border {
+    border-color: var(--border);
+  }
+  .bg-background {
+    background-color: var(--background);
+  }
+  .text-foreground {
+    color: var(--foreground);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
