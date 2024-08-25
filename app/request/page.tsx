@@ -101,21 +101,27 @@ const Request = () => {
       return;
     }
 
+    const user = {
+      email: session.data?.user.email,
+      agency: session.data?.user.agency,
+      uen: session.data?.user.uen,
+      address: session.data?.user.address,
+      poc_name: session.data?.user.poc_name,
+      poc_phone: session.data?.user.poc_phone,
+      halal_certification: session.data?.user.halal_certification,
+      hygiene_certification: session.data?.user.hygiene_certification,
+      role: session.data?.user.role,
+    };
+
+    console.log('USER', user);
+
     const data = {
       ...values,
       foodType: foodType,
-      user: {
-        email: session.data?.user.email,
-        agency: session.data?.user.agency,
-        uen: session.data?.user.uen,
-        address: session.data?.user.address,
-        poc_name: session.data?.user.poc_name,
-        poc_phone: session.data?.user.poc_phone,
-        halal_certification: session.data?.user.halal_certification,
-        hygiene_certification: session.data?.user.hygiene_certification,
-        role: session.data?.user.role,
-      },
+      user: user,
     };
+
+    console.log(data);
 
     try {
       // make api call to save request details in mongodb
