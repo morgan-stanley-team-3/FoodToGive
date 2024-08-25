@@ -3,30 +3,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Button,
-    Avatar,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Avatar,
 } from "@material-tailwind/react";
 import DonationCard from "./DonationCard"; // Ensure correct import path
 import Header from "../components/Header"; // Adjust the path as needed
 
 export interface Donation {
-    foodName: string;
-    foodCategory: string;
-    timeOfPreparation: string;
-    timeOfConsumption: string;
-    ingredient: string;
-    quantity: number;
-    perishable: string;
-    expiryDate: string;
-    donationStatus: string;
-    pickUpLocation: string;
-    specialHandling: string;
-    deliveryMethod: string;
+  bestBeforeDate: string;
+  createdAt: string;
+  deliveryMethod: string;
+  dropOffTime: string;
+  foodCategory: string;
+  foodImages: string;
+  foodName: string;
+  foodType: string;
+  pickUpLocation: string;
+  pickUpTime: string;
+  quantity: string;
+  specialHandling: string;
+  _id: string;
 }
 
 // prettier-ignore
@@ -68,9 +69,10 @@ export default function DonorDashboardClient() {
 
             <div className="flex gap-8">
                 <div className="flex-1 min-w-[30%]">
-                    {/* <Card
+                    <Card 
                         shadow={false}
                         className="relative h-full w-full items-end justify-center overflow-hidden text-center"
+           
                     >
                         <CardHeader
                             floated={false}
@@ -95,21 +97,21 @@ export default function DonorDashboardClient() {
                                 Tania Andrew
                             </Typography>
                         </CardBody>
-                    </Card> */}
+                    </Card>
                 </div>
 
                 {/* Right Column for Donation Cards */}
-                <div className="flex-1 min-w-[70%]">
-                    <h1 className="text-2xl font-bold mb-4 text-black">
-                        My donations
-                    </h1>
-                    {donations.map((donation, index) => (
-                        <DonationCard
-                            key={index} // Add a unique key prop here
-                            donation={donation}
-                        />
-                    ))}
-                </div>
+                <div className="flex-1 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto">
+    <h1 className="text-2xl font-bold mb-4 text-black">
+        My donations
+    </h1>
+    {donations.map((donation, index) => (
+        <DonationCard
+            key={index} // Add a unique key prop here
+            donation={donation}
+        />
+    ))}
+</div>
             </div>
         </div>
     );
