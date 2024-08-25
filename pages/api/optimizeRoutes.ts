@@ -36,6 +36,7 @@ interface RouteResponse {
     arrivalTime: string;
     jobId: number;
   }[];
+  geometry: string;
   color: string;
 }
 
@@ -160,13 +161,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             skills: [3, 14],
             time_window: [datetimeStrToTimestamp('27/08/2024 18:00'), datetimeStrToTimestamp('27/08/2024 23:00')]
           }
-        ]
+        ],
+        options: {
+          g: true
+        }
       }),
       {
         headers: {
           'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
           'Authorization': '5b3ce3597851110001cf624849a8b76e0ca043beb2b299204d411ef0',
-          'Content-Type': 'application/json; charset=utf-8'
+          'Content-Type': 'application/json',
         }
       }
     );
@@ -187,7 +191,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           arrivalTime: timestampToTimeStr(step.arrival),
           jobId: step.id
         })),
-      color: lineColors[route.vehicle] || 'black'
+        geometry: route.geometry,  // Include geometry data for drawing the route
+        color: lineColors[route.vehicle] || 'black'
     }));
 
     // Send the response back to the client
