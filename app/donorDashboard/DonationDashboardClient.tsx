@@ -35,20 +35,30 @@ export interface Donation {
 export default function DonorDashboardClient({donation}: {donation: any}) {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('')
+
+  useEffect(() => {
+    async function fetchSession() {
+      const sessionData = await getSession();
+      setEmail(sessionData?.user.email)
+      console.log(email)
+      // setLoading(false); // Set loading to false once session is fetched
+    }
+    fetchSession();
+  }, []);
 
 
   useEffect(() => {
     async function fetchDonations() {
+      if (!email) return;
       try {
-        const session = await getSession()
-        const email = session?.user.email
         console.log(email)
         const response = await axios.get(`/api/donations?email=${email}`);
 
         // const response = await axios.get('/api/donations'); // Adjust the API endpoint as needed
         setDonations(response.data);
-        console.log(response.data);
-        console.log(donations);
+        console.log("Response data:", response.data);
+        console.log("setDonations: ", donations);
       } catch (error) {
         console.error('Error fetching donations:', error);
       } finally {
@@ -56,7 +66,7 @@ export default function DonorDashboardClient({donation}: {donation: any}) {
       }
     }
     fetchDonations();
-  }, []);
+  }, [email]);
 
   useEffect(() => {
     console.log('Updated donations:', donations);
