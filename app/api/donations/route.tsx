@@ -1,5 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
+// export const dynamic = 'force-dynamic';
 
 // Create a single instance of the MongoClient to be reused across requests
 const uri = process.env.MONGODB_URI as string;

@@ -1,5 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
+// export const dynamic = 'force-dynamic';
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient>;
@@ -29,8 +30,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
     const collection = await getCollection();
-    // find donations made by donor with user.email 
-    const requests = await collection.find({"user.email": email}).toArray();
+    // find donations made by donor with user.email
+    const requests = await collection.find({ 'user.email': email }).toArray();
     return NextResponse.json(requests, { status: 200 });
   } catch (error) {
     console.error('MongoDB connection error:', error);

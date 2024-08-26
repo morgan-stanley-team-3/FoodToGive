@@ -41,15 +41,6 @@ import { useRouter } from "next/navigation";
 const Donate = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [email, setEmail] = useState('');
-  const [agency, setAgency] = useState('');
-  const [address, setAddress] = useState('');
-  const [pocName, setPocName] = useState('');
-  const [pocPhone, setPocPhone] = useState('');
-  const [halalCertification, setHalalCertification] = useState(false);
-  const [hygieneCertification, setHygieneCertification] = useState(false);
-  const [role, setRole] = useState('');
-
   const options = [
     { label: "Milk", value: "Milk" },
     { label: "Eggs", value: "Eggs" },
@@ -61,28 +52,6 @@ const Donate = () => {
     { label: "Shellfish (E.g. Lobster, prawn, crab)", value: "Shellfish" },
     { label: "Fish", value: "Fish" },
   ];
-
-  useEffect(() => {
-    async function fetchSession() {
-      const sessionData = await getSession();
-      setEmail(sessionData?.user.email)
-      setAgency(sessionData?.user.agency)
-      setAddress(sessionData?.user.address)
-      setPocName(sessionData?.user.poc_name)
-      setPocPhone(sessionData?.user.poc_phone)
-      setHalalCertification(sessionData?.user.halal_certification)
-      setHygieneCertification(sessionData?.user.hygeience_certification)
-      setRole(sessionData?.user.role)
-      console.log(email)
-      // setLoading(false); // Set loading to false once session is fetched
-    }
-    fetchSession();
-  }, []);
-
-  useEffect(() => {
-    console.log("Email has been updated:", email);
-  }, [email]); // This effect runs every time `email` changes
-
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -167,7 +136,6 @@ const Donate = () => {
     );
   }, [allergens]);
 
-  
   // Helper function to convert file to Base64
   const convertToBase64 = (file: File): Promise<string> => {
     console.log("convertToBase64 called with file:", file.name);
@@ -199,12 +167,14 @@ const Donate = () => {
     );
     values.foodImages = base64Images;
 
+    const session = await getSession();
+    //     console.log(session?.user)
 
     // make api call to save donation details in mongodb
-    // if (!session?.user) {
-    //   console.error("User not found in session storage");
-    //   return;
-    // }
+    if (!session?.user) {
+      console.error("User not found in session storage");
+      return;
+    }
     // const parsedUser = JSON.parse(session.user);
     // console.log(session.user.email);
 
@@ -212,14 +182,14 @@ const Donate = () => {
     const data = {
       ...values,
       user: {
-        email: email,
-        agency: agency,
-        address: address,
-        poc_name: pocName,
-        poc_phone: pocPhone,
-        halal_certification: halalCertification,
-        hygeience_certification: hygieneCertification,
-        role: role,
+        email: session.user.email,
+        agency: session.user.agency,
+        address: session.user.address,
+        poc_name: session.user.poc_name,
+        poc_phone: session.user.poc_phone,
+        halal_certification: session.user.halal_certification,
+        hygeience_certification: session.user.hygiene_certification,
+        role: session.user.role,
       },
       foodType: foodType,
     };
@@ -905,4 +875,3 @@ const Donate = () => {
 };
 
 export default Donate;
-

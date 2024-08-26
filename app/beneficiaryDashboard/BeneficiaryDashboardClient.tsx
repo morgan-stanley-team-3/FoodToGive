@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-} from "@material-tailwind/react";
-import BeneficiaryCard from "./BeneficiaryCard"; // Ensure correct import path
-import Header from "@/components/Header"; // Adjust the path as needed
-import Link from "next/link";
+  Card,
+  CardHeader,
+  CardBody,
+  Typography,
+} from '@material-tailwind/react';
+import BeneficiaryCard from './BeneficiaryCard'; // Ensure correct import path
+import Header from '@/components/Header'; // Adjust the path as needed
+import Link from 'next/link';
 export interface Request {
-    foodName: string;
-    foodType: string;
-    foodCategory: string;
-    needByTime: string;
-    specialRequest: string;
-    deliveryMethod: string;
-    deliveryTime: string;
-    deliveryLocation: string;
-    quantity: number;
-    numberOfServings: number;
+  foodName: string;
+  foodType: string;
+  foodCategory: string;
+  needByTime: string;
+  specialRequest: string;
+  deliveryMethod: string;
+  deliveryTime: string;
+  deliveryLocation: string;
+  quantity: number;
+  numberOfServings: number;
 }
 import { getSession } from 'next-auth/react';
 
@@ -29,35 +29,25 @@ import { getSession } from 'next-auth/react';
 export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiaries: Request[]}) {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [email, setEmail] = useState('')
 
     useEffect(() => {
-      async function fetchSession() {
-        const sessionData = await getSession();
-        setEmail(sessionData?.user.email)
-        console.log(email)
-        // setLoading(false); // Set loading to false once session is fetched
-      }
-      fetchSession();
+        async function fetchRequests() {
+            try {
+              const session = await getSession()
+              const email = session?.user.email
+              console.log(email)
+              const response = await axios.get(`/api/requests?email=${email}`);
+              setRequests(response.data);
+              console.log(response.data);
+              console.log(requests);
+            } catch (error) {
+                console.error("Error fetching requests:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchRequests();
     }, []);
-
-    useEffect(() => {
-      async function fetchRequests() {
-          try {
-            if (!email) return;
-            console.log(email)
-            const response = await axios.get(`/api/requests?email=${email}`);
-            setRequests(response.data);
-            console.log(response.data);
-            console.log(requests);
-          } catch (error) {
-              console.error("Error fetching requests:", error);
-          } finally {
-              setLoading(false);
-          }
-      }
-      fetchRequests();
-    }, [email]);
 
     useEffect(() => {
         console.log("Updated Requests:", requests);
@@ -67,6 +57,9 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
         return <div>Loading...</div>;
     }
 
+    if (!requests.length) {
+        return <div>No requests found.</div>;
+    }
 
     return (
       <div className='bg-gray-50 min-h-screen p-8'>
