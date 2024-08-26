@@ -1,15 +1,15 @@
 // pages/api/matchOrders.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient, Collection } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { Db, MongoClient, Collection } from 'mongodb';
 
 // MongoDB connection details
 const uri =
-  "mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
-const dbName = "database";
-const donationsCollection = "donations";
-const requestsCollection = "requests";
-const agencyScoreCollection = "agency";
-const entityCollection = "entities";
+  'mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster';
+const dbName = 'database';
+const donationsCollection = 'donations';
+const requestsCollection = 'requests';
+const agencyScoreCollection = 'agency';
+const entityCollection = 'entities';
 
 // Updated Donation Interface
 interface Donation {
@@ -86,7 +86,7 @@ const checkMatchValidity = (donation: Donation, request: Request): boolean => {
   }
 
   if (
-    donation.deliveryMethod === "selfDelivery" &&
+    donation.deliveryMethod === 'selfDelivery' &&
     donation.dropOffTime &&
     new Date(donation.dropOffTime) > new Date(request.needByTime)
   ) {
@@ -94,7 +94,7 @@ const checkMatchValidity = (donation: Donation, request: Request): boolean => {
   }
 
   if (
-    donation.deliveryMethod === "pickup" &&
+    donation.deliveryMethod === 'pickup' &&
     donation.pickUpTime &&
     new Date(donation.pickUpTime) > new Date(request.deliveryTime)
   ) {
@@ -122,7 +122,7 @@ const calculateDistance = (
 const calculateMatchScore = async (
   donation: Donation,
   request: Request,
-  db: any
+  db: Db
 ): Promise<number> => {
   let score = 0;
 
@@ -235,8 +235,8 @@ export default async function handler(
 
     res.status(200).json(matches);
   } catch (error) {
-    console.error("Error matching orders:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error matching orders:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     // if (client) await client.close();
   }

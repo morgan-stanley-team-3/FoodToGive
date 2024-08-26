@@ -1,34 +1,39 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
-    Button,
-    Avatar,
-} from "@material-tailwind/react";
-import DonationCard from "./DonationCard"; // Ensure correct import path
-import Header from "@/components/Header"; // Adjust the path as needed
-import Link from "next/link";
-import { getSession } from "next-auth/react";
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Avatar,
+} from '@material-tailwind/react';
+import DonationCard from './DonationCard'; // Ensure correct import path
+import Header from '@/components/Header'; // Adjust the path as needed
+import Link from 'next/link';
+import { getSession } from 'next-auth/react';
 
 export interface Donation {
-    foodName: string;
-    foodCategory: string;
-    timeOfPreparation: string;
-    timeOfConsumption: string;
-    ingredient: string;
-    quantity: number;
-    perishable: string;
-    expiryDate: string;
-    donationStatus: string;
-    pickUpLocation: string;
-    specialHandling: string;
-    deliveryMethod: string;
+  foodName: string;
+  foodType: string;
+  foodCategory: string;
+  timeOfPreparation: string;
+  timeOfConsumption: string;
+  ingredient: string;
+  quantity: number;
+  perishable: string;
+  expiryDate: string;
+  donationStatus: string;
+  pickUpLocation: string;
+  specialHandling: string;
+  deliveryMethod: string;
+  numberOfServings: number;
+  consumeByTiming: string;
+  pickUpTime: string;
+  dropOffTime: string;
 }
 
 // prettier-ignore

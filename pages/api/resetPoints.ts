@@ -1,12 +1,12 @@
 // pages/api/resetPoints.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { MongoClient } from 'mongodb';
 
 // MongoDB connection details
 const uri =
-  "mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
-const dbName = "database";
-const agencyScoreCollection = "agency";
+  'mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster';
+const dbName = 'database';
+const agencyScoreCollection = 'agency';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +15,7 @@ export default async function handler(
   const { entityName } = req.query;
 
   if (!entityName) {
-    return res.status(400).json({ error: "Entity name is required" });
+    return res.status(400).json({ error: 'Entity name is required' });
   }
 
   let client: MongoClient;
@@ -42,8 +42,8 @@ export default async function handler(
         .json({ error: `Entity with name ${entityName} not found.` });
     }
   } catch (error) {
-    console.error("Error resetting points:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error resetting points:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     // if (client) await client.close();
   }

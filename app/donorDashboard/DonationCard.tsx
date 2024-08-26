@@ -42,10 +42,17 @@ const DonationCard: React.FC<DonationCardProps> = ({ donation }) => {
 
     return (
         <Card
+            placeholder=""
+            onPointerEnterCapture={() => {}}
+            onPointerLeaveCapture={() => {}}
             shadow={false}
             className="relative mb-4 border border-black rounded-lg p-4"
         >
-            <CardBody>
+            <CardBody
+                placeholder=""
+                onPointerEnterCapture={() => {}}
+                onPointerLeaveCapture={() => {}}
+            >
                 {!isCooked && (
                     <Typography
                         variant="h5"
@@ -170,8 +177,20 @@ const DonationCard: React.FC<DonationCardProps> = ({ donation }) => {
                     </>
                 )}
             </CardBody>
-            <CardFooter className="pt-0">
-                <Button className="text-black">withdraw</Button>
+            <CardFooter
+                className="pt-0"
+                placeholder=""
+                onPointerEnterCapture={() => {}}
+                onPointerLeaveCapture={() => {}}
+            >
+                <Button
+                    className="text-black"
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                >
+                    withdraw
+                </Button>
             </CardFooter>
         </Card>
     );
