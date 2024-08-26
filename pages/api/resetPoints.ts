@@ -45,6 +45,6 @@ export default async function handler(
     console.error('Error resetting points:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    if (client!) await client.close();
+    // if (client) await client.close();
   }
 }
