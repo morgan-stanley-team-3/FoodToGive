@@ -41,7 +41,7 @@ const loginScheme = z.object({
 function Cards() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const form = searchParams.get(QUERY_PARAM_NAME) ?? '';
+  const form = searchParams?.get(QUERY_PARAM_NAME) ?? '';
   const session = useSession();
   const formToRender = LOGIN_TYPES.includes(form) ? form : LOGIN_TYPES[0];
 
@@ -167,7 +167,7 @@ function Cards() {
    * @param render String representing what argument to provide in the query param
    */
   function updateUrlHistory(render: string) {
-    const newParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams(searchParams?.toString());
     newParams.set('type', render);
     window.history.replaceState(null, '', `?${newParams.toString()}`);
   }

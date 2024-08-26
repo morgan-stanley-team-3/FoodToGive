@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -25,20 +25,49 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Header from '@/components/Header';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { ChevronLeft } from "lucide-react";
 
 const Request = () => {
-  const session = useSession();
   const router = useRouter();
   const { toast } = useToast();
+  const [email, setEmail] = useState('');
+  const [agency, setAgency] = useState('');
+  const [address, setAddress] = useState('');
+  const [pocName, setPocName] = useState('');
+  const [pocPhone, setPocPhone] = useState('');
+  const [halalCertification, setHalalCertification] = useState(false);
+  const [hygieneCertification, setHygieneCertification] = useState(false);
+  const [role, setRole] = useState('');
 
   // if (!session?.user) {
   //   router.replace('/');
   // } else if (session?.user.role !== 'donor') {
   //   router.replace('/dashboard');
   // }
+  useEffect(() => {
+    async function fetchSession() {
+      const sessionData = await getSession();
+      setEmail(sessionData?.user.email)
+      setAgency(sessionData?.user.agency)
+      setAddress(sessionData?.user.address)
+      setPocName(sessionData?.user.poc_name)
+      setPocPhone(sessionData?.user.poc_phone)
+      setHalalCertification(sessionData?.user.halal_certification)
+      setHygieneCertification(sessionData?.user.hygeience_certification)
+      setRole(sessionData?.user.role)
+      console.log(email)
+      // setLoading(false); // Set loading to false once session is fetched
+    }
+    fetchSession();
+  }, []);
+
+  useEffect(() => {
+    console.log("Email has been updated:", email);
+  }, [email]); // This effect runs every time `email` changes
+
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -96,22 +125,17 @@ const Request = () => {
 
   async function onSubmit(values: any) {
     // make api call to save request details in mongodb
-    if (!session.data?.user) {
-      // The user is not found in the session storage, should be prevented by the router
-      return;
-    }
 
     const user = {
-      email: session.data?.user.email,
-      agency: session.data?.user.agency,
-      uen: session.data?.user.uen,
-      address: session.data?.user.address,
-      poc_name: session.data?.user.poc_name,
-      poc_phone: session.data?.user.poc_phone,
-      halal_certification: session.data?.user.halal_certification,
-      hygiene_certification: session.data?.user.hygiene_certification,
-      role: session.data?.user.role,
-    };
+      email: email,
+      agency: agency,
+      address: address,
+      poc_name: pocName,
+      poc_phone: pocPhone,
+      halal_certification: halalCertification,
+      hygeience_certification: hygieneCertification,
+      role: role
+    }
 
     const data = {
       ...values,
@@ -175,7 +199,7 @@ const Request = () => {
       <Header />
 
       {/* Form Content */}
-      <section className='bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center'>
+      <section className='bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center relative'>
         <div className='flex flex-col items-center w-full max-w-4xl'>
           <h1 className='text-2xl font-bold mb-2'>Request for Food</h1>
           <p className='text-sm text-gray-700 mb-7'>
@@ -183,6 +207,17 @@ const Request = () => {
             request for food donations from our donors. We will do our best to
             match you with a donor as soon as possible!
           </p>
+          <div className="absolute top-9 left-10">
+            <Button
+              onClick={() => router.push("/beneficiaryDashboard")}
+              variant="outline"
+              size="sm"
+              className="flex items-center border-none"
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+          </div>
 
           <div className='flex justify-center space-x-4 mb-6'>
             <button
