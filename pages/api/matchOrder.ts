@@ -1,15 +1,15 @@
 // pages/api/matchOrders.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { Db, MongoClient } from 'mongodb';
 
 // MongoDB connection details
 const uri =
-  "mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
-const dbName = "database";
-const donationsCollection = "donations";
-const requestsCollection = "requests";
-const agencyScoreCollection = "agency";
-const entityCollection = "entities";
+  'mongodb+srv://rwu:Wu123456@atlascluster.zs8ab.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster';
+const dbName = 'database';
+const donationsCollection = 'donations';
+const requestsCollection = 'requests';
+const agencyScoreCollection = 'agency';
+const entityCollection = 'entities';
 
 // Interface definitions
 interface Donation {
@@ -62,7 +62,7 @@ const checkMatchValidity = (donation: Donation, request: Request): boolean => {
   }
 
   if (
-    donation.deliveryMethod === "selfDelivery" &&
+    donation.deliveryMethod === 'selfDelivery' &&
     donation.dropOffTime &&
     new Date(donation.dropOffTime) > new Date(request.needByTime)
   ) {
@@ -70,7 +70,7 @@ const checkMatchValidity = (donation: Donation, request: Request): boolean => {
   }
 
   if (
-    donation.deliveryMethod === "pickup" &&
+    donation.deliveryMethod === 'pickup' &&
     donation.pickUpTime &&
     new Date(donation.pickUpTime) > new Date(request.deliveryTime)
   ) {
@@ -95,7 +95,7 @@ const calculateDistance = (
 const calculateMatchScore = async (
   donation: Donation,
   request: Request,
-  db: any
+  db: Db
 ): Promise<number> => {
   let score = 0;
 
@@ -141,10 +141,13 @@ export default async function handler(
     const db = client.db(dbName);
 
     const donations = await db
-      .collection(donationsCollection)
+      .collection<Donation>(donationsCollection)
       .find({})
       .toArray();
-    const requests = await db.collection(requestsCollection).find({}).toArray();
+    const requests = await db
+      .collection<Request>(requestsCollection)
+      .find({})
+      .toArray();
     const agencyScores = await db
       .collection<AgencyScore>(agencyScoreCollection)
       .find({})
@@ -196,14 +199,14 @@ export default async function handler(
         });
       }
     }
-    console.log("hi", matches);
+    console.log('hi', matches);
 
     // Return the best match for each donation
     res.status(200).json(matches);
   } catch (error) {
-    console.error("Error matching orders:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error matching orders:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    if (client) await client.close();
+    if (client!) await client.close();
   }
 }
