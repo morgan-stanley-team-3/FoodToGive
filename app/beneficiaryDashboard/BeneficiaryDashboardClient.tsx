@@ -74,7 +74,7 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
             </button>
           </Link>
         </div>
-        <div className='flex gap-8 mr-8'>
+        <div className='flex gap-8'>
           {/* Left Column for Welcome Card */}
           <div className='flex-1 min-w-[30%]'>
             <Card

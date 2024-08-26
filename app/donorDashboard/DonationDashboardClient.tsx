@@ -86,7 +86,7 @@ export default function DonorDashboardClient({donation}: {donation: any}) {
         </Link>
       </div>
 
-      <div className='flex gap-8 mr-8'>
+      <div className='flex gap-8'>
         <div className='flex-1 min-w-[30%]'>
           <Card
             placeholder=""
