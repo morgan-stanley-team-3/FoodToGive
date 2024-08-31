@@ -82,9 +82,6 @@ export default function DonorDashboardClient({donation}: {donation: any}) {
 
   if (session.status === 'authenticated') {
     switch (session.data!.user.role) {
-      case 'donor':
-        router.push('/donorDashboard');
-        return <div>Welcome back! Redirecting...</div>;
       case 'beneficiary':
         router.push('/beneficiaryDashboard');
         return <div>Action not permitted! Redirecting...</div>;
@@ -162,7 +159,7 @@ export default function DonorDashboardClient({donation}: {donation: any}) {
         </div>
 
         {/* Right Column for Donation Cards */}
-        <div className='flex-1 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto'>
+        <div className='flex-1 pr-8min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto'>
           <h1 className='text-2xl font-bold mb-4 text-black'>My donations</h1>
           {donations.map((donation, index) => (
             <DonationCard

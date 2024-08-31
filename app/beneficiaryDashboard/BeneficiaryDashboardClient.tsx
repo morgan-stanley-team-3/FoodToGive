@@ -70,9 +70,6 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
       switch (session.data!.user.role) {
         case 'donor':
           router.push('/donorDashboard');
-          return <div>Welcome back! Redirecting...</div>;
-        case 'beneficiary':
-          router.push('/beneficiaryDashboard');
           return <div>Action not permitted! Redirecting...</div>;
         case 'admin':
           router.push('/adminDashboard');
@@ -151,7 +148,7 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
             </Card>
           </div>
 
-          <div className='flex-1 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto'>
+          <div className='flex-1 pr-8 min-w-[70%] max-h-[calc(100vh-100px)] overflow-y-auto'>
             <h1 className='text-2xl font-bold mb-4 text-black'>My requests</h1>
             {requests.map((request, index) => (
               <BeneficiaryCard
