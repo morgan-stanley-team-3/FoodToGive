@@ -172,6 +172,24 @@ function Cards() {
     window.history.replaceState(null, '', `?${newParams.toString()}`);
   }
 
+  if (session.status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (session.status === 'authenticated') {
+    switch (session.data.user.role) {
+      case 'donor':
+        router.push('/donorDashboard');
+        return <div>Welcome back! Redirecting...</div>;
+      case 'beneficiary':
+        router.push('/beneficiaryDashboard');
+        return <div>Welcome back! Redirecting...</div>;
+      case 'admin':
+        router.push('/adminDashboard');
+        return <div>Welcome back! Redirecting...</div>;
+    }
+  }
+
   return (
     <section className='h-full w-full flex flex-col items-center'>
       <div className='container mx-auto'>

@@ -1,5 +1,7 @@
-import DonationDashboardClient from "./DonationDashboardClient"; // Client component
-import { Donation } from "./DonationDashboardClient";
+import { useSession } from 'next-auth/react';
+import DonationDashboardClient from './DonationDashboardClient'; // Client component
+import { Donation } from './DonationDashboardClient';
+import { useRouter } from 'next/navigation';
 
 export interface DonationCardProps {
   donation: Donation;
@@ -10,13 +12,12 @@ export default async function DonorDashboardPage() {
 
   // Fetch data on the server side
   const res = await fetch(`${appUrl}/api/donations`, {
-    cache: "no-store",
+    cache: 'no-store',
   });
   const donations = await res.json();
 
   return (
     // Render the client component and pass the data as props
     <DonationDashboardClient donation={donations} />
-    // <DonationDashboardClient donation={donations} />
   );
 }
