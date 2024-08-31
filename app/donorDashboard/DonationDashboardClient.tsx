@@ -14,7 +14,8 @@ import {
 import DonationCard from './DonationCard'; // Ensure correct import path
 import Header from '@/components/Header'; // Adjust the path as needed
 import Link from 'next/link';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export interface Donation {
   foodName: string;
@@ -67,11 +68,36 @@ export default function DonorDashboardClient({donation}: {donation: any}) {
     console.log('Updated donations:', donations);
   }, [donations]);
 
-  if (loading) {
+  const session = useSession();
+  const router = useRouter();
+
+  if (session.status === 'loading') {
     return <div>Loading...</div>;
   }
 
+  if (session.status === 'unauthenticated') {
+    router.push('/login');
+    return <div>Not logged in! Redirecting...</div>;
+  }
 
+  if (session.status === 'authenticated') {
+    switch (session.data!.user.role) {
+      case 'donor':
+        router.push('/donorDashboard');
+        return <div>Welcome back! Redirecting...</div>;
+      case 'beneficiary':
+        router.push('/beneficiaryDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+      case 'admin':
+        router.push('/adminDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+    }
+  }
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <div className='bg-gray-50 min-h-screen p-8'>
       <Header />

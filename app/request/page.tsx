@@ -28,17 +28,12 @@ import Header from '@/components/Header';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { ChevronLeft } from 'lucide-react';
 
 const Request = () => {
   const session = useSession();
   const router = useRouter();
   const { toast } = useToast();
-
-  // if (!session?.user) {
-  //   router.replace('/');
-  // } else if (session?.user.role !== 'donor') {
-  //   router.replace('/dashboard');
-  // }
 
   const cookedFormSchema = z.object({
     foodName: z.string().min(2, {
@@ -169,13 +164,36 @@ const Request = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [foodType, setFoodType] = useState('Non-Cooked Food');
 
+  if (session.status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (session.status === 'unauthenticated') {
+    router.push('/login');
+    return <div>Redirecting...</div>;
+  }
+
+  if (session.status === 'authenticated') {
+    switch (session.data!.user.role) {
+      case 'donor':
+        router.push('/donorDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+      case 'admin':
+        router.push('/adminDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+    }
+  }
+
   return (
     <div className='bg-gray-100 min-h-screen p-8'>
       {/* Navigation Bar */}
       <Header />
 
       {/* Form Content */}
-      <section className='bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center'>
+      <section
+        className='bg-white rounded-lg shadow-lg p-12 mb-12 flex justify-center relative
+      '
+      >
         <div className='flex flex-col items-center w-full max-w-4xl'>
           <h1 className='text-2xl font-bold mb-2'>Request for Food</h1>
           <p className='text-sm text-gray-700 mb-7'>
@@ -183,6 +201,18 @@ const Request = () => {
             request for food donations from our donors. We will do our best to
             match you with a donor as soon as possible!
           </p>
+
+          <div className='absolute top-9 left-10'>
+            <Button
+              onClick={() => router.push('/beneficiaryDashboard')}
+              variant='outline'
+              size='sm'
+              className='flex items-center border-none'
+            >
+              <ChevronLeft className='h-4 w-4 mr-2' />
+              Back
+            </Button>
+          </div>
 
           <div className='flex justify-center space-x-4 mb-6'>
             <button
@@ -357,7 +387,12 @@ const Request = () => {
                 )}
 
                 <div className='flex justify-end'>
-                  <Button type='submit'>Submit</Button>
+                  <Button
+                    className='mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                    type='submit'
+                  >
+                    Submit
+                  </Button>
                 </div>
               </form>
             </Form>
@@ -539,7 +574,12 @@ const Request = () => {
                   </>
                 )}
                 <div className='flex justify-end'>
-                  <Button type='submit'>Submit</Button>
+                  <Button
+                    className='mt-4 bg-[#A2C765] hover:bg-[#8BBE3D]'
+                    type='submit'
+                  >
+                    Submit
+                  </Button>
                 </div>
               </form>
             </Form>

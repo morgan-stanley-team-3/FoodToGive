@@ -1,6 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient>;

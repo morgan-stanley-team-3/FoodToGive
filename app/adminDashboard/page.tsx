@@ -13,6 +13,8 @@ import AWS from 'aws-sdk';
 // import MapComponent from "./map";
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const MapComponent = dynamic(() => import('./map'), {
   ssr: false,
@@ -153,6 +155,28 @@ const Dashboard: React.FC = () => {
     { header: 'foodCategory', accessor: 'foodCategory' },
     { header: 'deliveryMethod', accessor: 'deliveryMethod' },
   ];
+
+  const router = useRouter();
+  const session = useSession();
+  if (session.status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (session.status === 'unauthenticated') {
+    router.push('/login');
+    return <div>Not logged in! Redirecting...</div>;
+  }
+
+  if (session.status === 'authenticated') {
+    switch (session.data!.user.role) {
+      case 'beneficiary':
+        router.push('/beneficiaryDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+      case 'donor':
+        router.push('/donorDashboard');
+        return <div>Action not permitted! Redirecting...</div>;
+    }
+  }
 
   return (
     <div className='bg-gray-50 min-h-screen p-8'>

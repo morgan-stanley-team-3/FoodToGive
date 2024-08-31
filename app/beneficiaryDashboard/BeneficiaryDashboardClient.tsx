@@ -23,7 +23,8 @@ export interface Request {
   quantity: number;
   numberOfServings: number;
 }
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // prettier-ignore
 export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiaries: Request[]}) {
@@ -53,12 +54,38 @@ export default function BeneficiaryDashboardClient({beneficiaries}: {beneficiari
         console.log("Updated Requests:", requests);
     }, [requests]);
 
+    const session = useSession();
+    const router = useRouter();
+
+    if (session.status === 'loading') {
+      return <div>Loading...</div>;
+    }
+
+    if (session.status === 'unauthenticated') {
+      router.push('/login');
+      return <div>Not logged in! Redirecting...</div>;
+    }
+
+    if (session.status === 'authenticated') {
+      switch (session.data!.user.role) {
+        case 'donor':
+          router.push('/donorDashboard');
+          return <div>Welcome back! Redirecting...</div>;
+        case 'beneficiary':
+          router.push('/beneficiaryDashboard');
+          return <div>Action not permitted! Redirecting...</div>;
+        case 'admin':
+          router.push('/adminDashboard');
+          return <div>Action not permitted! Redirecting...</div>;
+      }
+    }
+
     if (loading) {
-        return <div>Loading...</div>;
+      return <div>Loading...</div>;
     }
 
     if (!requests.length) {
-        return <div>No requests found.</div>;
+      return <div>No requests found.</div>;
     }
 
     return (
